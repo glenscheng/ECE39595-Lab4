@@ -20,7 +20,6 @@ polynomial polynomial::operator+(const polynomial& other) const {
                 result.poly[curr_power] = (this -> poly)[curr_power];
             }
 
-            iter++;
         }
 
     } else {
@@ -36,7 +35,6 @@ polynomial polynomial::operator+(const polynomial& other) const {
                 result.poly[curr_power] = other.poly[curr_power];
             }
 
-            iter++;
         } 
 
     }
