@@ -10,23 +10,22 @@ polynomial polynomial::operator+(const polynomial& other) const {
     if ((this -> find_degree_of()) >= other.find_degree_of()) {
 
         // Iterate through all the terms in the polynomial
-        for (auto iter = (this -> poly).begin(); iter != (this -> poly).end(); i++) {
+        for (auto iter = (this -> poly).begin(); iter != (this -> poly).end(); iter++) {
 
             // Check if the second polynomial contains the power
             size_t curr_power = (*iter).first; 
-            if (other.contains(curr_power)) {
+            if (other.poly.contains(curr_power)) {
                 result.poly[curr_power] = (this -> poly)[curr_power] + other.poly[curr_power];
             } else {
                 result.poly[curr_power] = (this -> poly)[curr_power];
             }
 
-            iter++;
         }
 
     } else {
         
         // Iterate through all the terms in the polynomial
-        for (auto iter = other.poly.begin(); iter != other.poly.end(); i++) {
+        for (auto iter = other.poly.begin(); iter != other.poly.end(); iter++) {
 
             // Check if the second polynomial contains the power
             size_t curr_power = (*iter).first; 
@@ -36,7 +35,6 @@ polynomial polynomial::operator+(const polynomial& other) const {
                 result.poly[curr_power] = other.poly[curr_power];
             }
 
-            iter++;
         } 
 
     }
