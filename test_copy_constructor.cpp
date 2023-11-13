@@ -90,11 +90,59 @@ static void nonempty() {
   cout << "\033[0;32mPassed\033[0m (" << passed << "/" << num_tests << ")" << endl;
 }
 
+// test copy constructor with nonempty polynomial/map and checking if we can change values
+static void change() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for copy constructor: testing change with 2x^2 8x^0: {{3,0},{2,2},{0,8}}." << endl;
+
+  // initialize
+  int passed = 0;
+  int num_tests = 0;
+  vector<pair<power, coeff>> poly_input = {{3,0},{2,2},{0,8}};
+  polynomial p1(poly_input.begin(), poly_input.end());
+  polynomial p2(p1);
+  // print
+  cout << "Before clearing p2:" << endl;
+  cout << "Print old p1: ";
+  p1.print();
+  cout << "Print old p2: ";
+  p2.print();
+  cout << endl;
+
+  // act
+  p2.clear_poly();
+
+  // print
+  cout << "After clearing p2:" << endl;
+  cout << "Print new p1: ";
+  p1.print();
+  cout << "Print new p2: ";
+  p2.print();
+  cout << endl;
+
+  // check that only p2 map is empty 
+  if (p2.get_poly().empty() == true) {
+    passed++;
+  } else {
+    cout << "* * FAILED * * map is not empty" << endl;
+  }
+  num_tests++;
+  if (p1.get_poly().empty() == false) {
+    passed++;
+  } else {
+    cout << "* * FAILED * * map is not empty" << endl;
+  }
+  num_tests++;
+
+  cout << "\033[0;32mPassed\033[0m (" << passed << "/" << num_tests << ")" << endl;
+}
+
 
 void test_copy_constructor_main() {
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
   cout << "Starting test for polynomial copy constructor" << endl;
   empty();
   nonempty();
+  change();
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
