@@ -29,6 +29,11 @@
     return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 }*/
 
+// Test Function Declarations
+void test_constructor_main();
+void test_copy_constructor_main();
+void test_assignment_operator_main();
+
 int main()
 {
     /** We're doing (x+1)^2, so solution is x^2 + 2x + 1*/
@@ -52,5 +57,8 @@ int main()
         std::cout << "Failed test" << std::endl;
     }*/
 
-    test_addition();
+  test_constructor_main();
+  test_copy_constructor_main();
+  test_assignment_operator_main();
+  test_addition();
 }
