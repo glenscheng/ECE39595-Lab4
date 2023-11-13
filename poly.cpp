@@ -4,20 +4,14 @@
 // Construct a new polynomial object that is the number 0 (ie. 0x^0)
 polynomial::polynomial() {}
 
-// Construct a new polynomial object from an iterator to pairs of <power,coeff>
-template <typename Iter>
-polynomial::polynomial(Iter begin, Iter end) {
-    
-    Iter p = begin; // Points to the current pair
+// Copy constructor 
+polynomial::polynomial(const polynomial &other) {}
 
-    for (Iter p = begin; p != end; p++) {
+// Assignment operator 
+polynomial& polynomial::operator=(const polynomial &other) {return *this;}
 
-        // Insert the current power and coefficient pair
-        (this -> poly).insert(*p);
-
-    }
-
-}
+// Canonical form 
+std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {return std::vector<std::pair<power, coeff>>();}
 
 // Returns the degree of the polynomial
 size_t polynomial::find_degree_of() {
@@ -29,7 +23,7 @@ size_t polynomial::find_degree_of() {
 }
 
 // Prints the polynomial
-void print() const {
+void polynomial::print() const {
 
     for (auto p = (this -> poly).rbegin(); p != (this -> poly).rend(); p++) {
         int pow = p -> first;
@@ -41,7 +35,7 @@ void print() const {
 }
 
 // Adds two polynomials (polynomial + polynomial) and returns the result
-polynomial polynomial::operator+(const polynomial& other) const {
+polynomial polynomial::operator+(polynomial& other) {
 
     polynomial result;
 
@@ -86,7 +80,7 @@ polynomial polynomial::operator+(const polynomial& other) const {
                 if ((this -> poly).find(curr_power) != (this -> poly).end()) {
                     result.poly[curr_power] = (this -> poly)[curr_power] + other.poly[curr_power];
                 } else {
-                    result.poly[curr_power] = other.poly.[curr_power];
+                    result.poly[curr_power] = other.poly[curr_power];
                 }
                 
             } else {
@@ -106,7 +100,7 @@ polynomial polynomial::operator+(const polynomial& other) const {
 }
 
 // Adds a polynomial and a number (polynomial + int) and returns the result
-polynomial polynomial::operator+(const int i) const {
+polynomial polynomial::operator+(const int i) {
     
     // Create a copy of the current polynomial
     polynomial result = *this; 
@@ -126,7 +120,7 @@ polynomial polynomial::operator+(const int i) const {
 }
 
 // Adds a number and a polynomial (int + polynomial) and returns the result
-polynomial operator+(const int i, const polynomial& polynomial_object) {
+polynomial operator+(const int i, polynomial& polynomial_object) {
     
     // Create a copy of the current polynomial
     polynomial result = polynomial_object; 
@@ -145,14 +139,14 @@ polynomial operator+(const int i, const polynomial& polynomial_object) {
 }
 
 // Multiplies a polynomial and a number (polynomial * int) and returns the result
-polynomial polynomial::operator*(const int i) const {
+polynomial polynomial::operator*(const int i) {
 
     polynomial result;
 
     // Don't add zero terms
     if (i != 0) {
         for (auto iter = (this -> poly).begin(); iter != (this -> poly).end(); iter++) {
-            result.insert(std::pair<power, coeff>(iter -> first, (iter -> second) * i));
+            result.poly.insert(std::pair<power, coeff>(iter -> first, (iter -> second) * i));
         }
     }
 
@@ -161,14 +155,14 @@ polynomial polynomial::operator*(const int i) const {
 }
 
 // Multiplies a polynomial and a number (polynomial * int) and returns the result
-polynomial operator*(const int i, const polynomial& polynomial_object) { 
+polynomial operator*(const int i, polynomial& polynomial_object) { 
     
     polynomial result;
 
     // Don't add zero terms
     if (i != 0) {
         for (auto iter = polynomial_object.poly.begin(); iter != polynomial_object.poly.end(); iter++) {
-            result.insert(std::pair<power, coeff>(iter -> first, (iter -> second) * i));
+            result.poly.insert(std::pair<power, coeff>(iter -> first, (iter -> second) * i));
         }
     }
 
@@ -176,7 +170,7 @@ polynomial operator*(const int i, const polynomial& polynomial_object) {
 }
 
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
-polynomial operator*(const polynomial& other) const {
+polynomial polynomial::operator*(polynomial& other) {
 
     polynomial result;
 

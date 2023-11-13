@@ -5,6 +5,7 @@
 #include <utility>
 #include <cstddef>
 #include <map>
+#include <iostream>
 
 using power = size_t;
 using coeff = int;
@@ -86,7 +87,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator+(const polynomial& other) const;  
+    polynomial operator+(polynomial& other);  
 
     /**
      * @brief Adds a polynomial and a number (polynomial + int) and returns the result
@@ -94,7 +95,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator+(const int i) const; 
+    polynomial operator+(const int i); 
 
     /**
      * @brief Adds a number and a polynomial (int + polynomial) and returns the result
@@ -102,7 +103,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    friend polynomial operator+(const int i, const polynomial& polynomial_object);
+    friend polynomial operator+(const int i, polynomial& polynomial_object);
 
     /**
      * @brief Multiplies two polynomials (polynomial * polynomial) and returns the result
@@ -110,7 +111,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator*(const polynomial& other) const;  
+    polynomial operator*(polynomial& other);  
 
     /**
      * @brief Multiplies a polynomial and a number (polynomial * int) and returns the result
@@ -118,7 +119,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator*(const int i) const; 
+    polynomial operator*(const int i); 
 
     /**
      * @brief Multiplies a number and a polynomial (int * polynomial) and returns the result
@@ -126,7 +127,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    friend polynomial operator*(const int i, const polynomial& polynomial_object);
+    friend polynomial operator*(const int i, polynomial& polynomial_object);
 
     /**
      * @brief Returns the degree of the polynomial
@@ -158,5 +159,18 @@ class polynomial
      */
     std::vector<std::pair<power, coeff>> canonical_form() const;
 };
+
+// Construct a new polynomial object from an iterator to pairs of <power,coeff>
+template <typename Iter>
+polynomial::polynomial(Iter begin, Iter end) {
+
+    for (Iter p = begin; p != end; p++) {
+
+        // Insert the current power and coefficient pair
+        (this -> poly).insert(*p);
+
+    }
+
+}
 
 #endif
