@@ -4,14 +4,18 @@
 #include <vector>
 #include <utility>
 #include <cstddef>
+#include <map>
 
 using power = size_t;
 using coeff = int;
+using std::map;
 
 class polynomial
 {
+  private:
+    map<power, coeff> poly;
 
-public:
+  public:
     /**
      * @brief Construct a new polynomial object that is the number 0 (ie. 0x^0)
      *
