@@ -1,14 +1,31 @@
 #include <map>
 #include "poly.h"
 
+using std::map;
+
+
 // Construct a new polynomial object that is the number 0 (ie. 0x^0)
 polynomial::polynomial(void) {} // stay as empty map
 
 // Copy constructor 
-polynomial::polynomial(const polynomial &other) {}
+polynomial::polynomial(const polynomial &other) {
+  // Initialize and fill new map w/ `other` polynomial
+  map<power, coeff> new_poly(other.poly);
+
+  // Copy map to `this` polynomial
+  poly = new_poly;
+}
 
 // Assignment operator 
-polynomial& polynomial::operator=(const polynomial &other) {return *this;}
+polynomial& polynomial::operator=(const polynomial &other) {
+  // Initialize and fill new map w/ `other` polynomial
+  map<power, coeff> new_poly(other.poly);
+
+  // Copy map to `this` polynomial
+  poly = new_poly;
+
+  return *this;
+}
 
 // Canonical form 
 std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {return std::vector<std::pair<power, coeff>>();}
