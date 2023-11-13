@@ -1,6 +1,44 @@
 #include <map>
 #include "poly.h"
 
+// Construct a new polynomial object that is the number 0 (ie. 0x^0)
+polynomial::polynomial() {}
+
+// Construct a new polynomial object from an iterator to pairs of <power,coeff>
+template <typename Iter>
+polynomial::polynomial(Iter begin, Iter end) {
+    
+    Iter p = begin; // Points to the current pair
+
+    for (Iter p = begin; p != end; p++) {
+
+        // Insert the current power and coefficient pair
+        (this -> poly).insert(*p);
+
+    }
+
+}
+
+// Returns the degree of the polynomial
+size_t polynomial::find_degree_of() {
+    if (!((this -> poly).empty())) {
+        return (this -> poly).rbegin() -> first; 
+    } else {
+        return 0;
+    }
+}
+
+// Prints the polynomial
+void print() const {
+
+    for (auto p = (this -> poly).rbegin(); p != (this -> poly).rend(); p++) {
+        int pow = p -> first;
+        int cof = p -> second;
+        std::cout << "(" << cof << "x^" << pow << ") + ";  
+    }
+
+    std::cout << "0" << std::endl;
+}
 
 // Adds two polynomials (polynomial + polynomial) and returns the result
 polynomial polynomial::operator+(const polynomial& other) const {
