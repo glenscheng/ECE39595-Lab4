@@ -202,6 +202,10 @@ polynomial polynomial::operator*(polynomial& other) {
     return result;
 }
 
+// Finds the remainder of a polynomial divided by another polynomial
+polynomial polynomial::operator%(polynomial& other) {
+}
+
 // Test method to determine if coeff is correct at a specific power
 bool polynomial::check_coeff(power pwr, coeff exp_c) {
   // Check that 0 coefficient means that term is not in map

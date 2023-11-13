@@ -94,6 +94,7 @@ class polynomial
      * Modulo (%) should support
      * 1. polynomial % polynomial
      */
+
     /**
      * @brief Adds two polynomials (polynomial + polynomial) and returns the result
      *
@@ -141,6 +142,14 @@ class polynomial
      *  The result of the addition
      */
     friend polynomial operator*(const int i, polynomial& polynomial_object);
+
+    /**
+     * @brief Finds the remainder of a polynomial divided by another polynomial
+     *
+     * @return polynomial
+     *  The remainder
+     */
+    polynomial operator%(polynomial& other);  
 
     /**
      * @brief Returns the degree of the polynomial
