@@ -56,63 +56,44 @@ polynomial polynomial::operator+(polynomial& other) {
 
     polynomial result;
 
-    // Check which polynomial has the higer degree
-    if ((this -> find_degree_of()) >= other.find_degree_of()) {
+	// Initialize pointers to both of the polynomials
+	auto p = (this -> poly).rbegin();
+	auto q = other.poly.rbegin();
+	auto p_end = (this -> poly).rend();
+	auto q_end = other.poly.rend();
 
-        // Iterate through all the terms in both of the polynomials
-        for (size_t curr_power = this -> find_degree_of(); curr_power >= 0; curr_power--) {
+	// Iterate through both of the polynomials and add up the terms
+	while (p != p_end || q != q_end) {
 
-            // Check if the polynomials contain the power
-            // If power is there, then add up the coefficients.
-            // Otherwise, keep one of the polynomials' coefficient
-            if ((this -> poly).find(curr_power) != (this -> poly).end()) {
+		// Check if reached the end of one of the polynomials
+		if (p == p_end) {
+			result.poly.insert(std::pair<power, coeff>(q -> first, q -> second));
+			q++;
+		} else if (q == q_end) {
+			result.poly.insert(std::pair<power, coeff>(p -> first, p -> second));
+			p++;
 
-                if (other.poly.find(curr_power) != other.poly.end()) {
-                    result.poly[curr_power] = (this -> poly)[curr_power] + other.poly[curr_power];
-                } else {
-                    result.poly[curr_power] = (this -> poly)[curr_power];
-                }
-                
-            } else {
-                
-                // If both of the polynomials' coefficients are 0, then don't 
-                // insert any term to keep the non-zero policy consistent
-                if (other.poly.find(curr_power) != other.poly.end()) {
-                    result.poly[curr_power] = other.poly[curr_power];
-                }
-            }
+		// Check if there are terms corresponding to the current degree in both of the polynomials
+		} else if ((p -> first) == (q -> first)) {
 
-        }
+			// Don't add zero terms
+			if ((p -> second) + (q -> second) != 0) {
+				result.poly.insert(std::pair<power, coeff>(p -> first, (p -> second) + (q -> second)));
+			}
+			p++;
+			q++;
 
-    } else {
-        
-        // Iterate through all the terms in both of the polynomials
-        for (size_t curr_power = other.find_degree_of(); curr_power >= 0; curr_power--) {
+		// Insert the higer degree power first
+		} else if (p -> first > q -> first) {
+			result.poly.insert(std::pair<power, coeff>(p -> first, p -> second));
+			p++;
+		} else {
+			result.poly.insert(std::pair<power, coeff>(q -> first, q -> second));
+			q++;
+		}
 
-            // Check if the polynomials contain the power
-            // If power is there, then add up the coefficients.
-            // Otherwise, keep one of the polynomials' coefficient
-            if (other.poly.find(curr_power) != other.poly.end()) {
-
-                if ((this -> poly).find(curr_power) != (this -> poly).end()) {
-                    result.poly[curr_power] = (this -> poly)[curr_power] + other.poly[curr_power];
-                } else {
-                    result.poly[curr_power] = other.poly[curr_power];
-                }
-                
-            } else {
-                
-                // If both of the polynomials' coefficients are 0, then don't 
-                // insert any term to keep the non-zero policy consistent
-                if ((this -> poly).find(curr_power) != (this -> poly).end()) {
-                    result.poly[curr_power] = (this -> poly)[curr_power];
-                }
-            }
-
-        }
-
-    }
-    
+	}
+	
     return result;
 }
 
@@ -122,16 +103,22 @@ polynomial polynomial::operator+(const int i) {
     // Create a copy of the current polynomial
     polynomial result = *this; 
 
-    // Don't add zero terms
-    if (i != 0) {
-        // Add the constant to the polynomial
-        if (result.poly.find(0) != result.poly.end()) {
-            result.poly[0] = result.poly[0] + i;
-        } else {
-            result.poly[0] = i;
-        }
-    }
+	size_t pow = 0;
 
+	// Add the constant to the polynomial
+	if (result.poly.find(pow) != result.poly.end()) {
+		// Don't add zero terms
+		if (result.poly[pow] + i != 0) {
+			result.poly[pow] = result.poly[pow] + i;
+		} else {
+			result.poly.erase(pow);
+		}
+	} else {
+		// Don't add zero terms
+		if (i != 0) {
+			result.poly[pow] = i;
+		}
+	}
 
     return result;
 }
@@ -142,15 +129,22 @@ polynomial operator+(const int i, polynomial& polynomial_object) {
     // Create a copy of the current polynomial
     polynomial result = polynomial_object; 
 
-    // Don't add zero terms
-    if (i != 0) {
-        // Add the constant to the polynomial
-        if (result.poly.find(0) != result.poly.end()) {
-            result.poly[0] = result.poly[0] + i;
-        } else {
-            result.poly[0] = i;
-        }
-    }
+	size_t pow = 0;
+
+	// Add the constant to the polynomial
+	if (result.poly.find(pow) != result.poly.end()) {
+		// Don't add zero terms
+		if (result.poly[pow] + i != 0) {
+			result.poly[pow] = result.poly[pow] + i;
+		} else {
+			result.poly.erase(pow);
+		}
+	} else {
+		// Don't add zero terms
+		if (i != 0) {
+			result.poly[pow] = i;
+		}
+	}
 
     return result;
 }
