@@ -31,6 +31,8 @@
 
 // Test Function Declarations
 void test_constructor_main();
+void test_copy_constructor_main();
+void test_assignment_operator_main();
 
 int main()
 {
@@ -56,5 +58,7 @@ int main()
     }*/
 
   test_constructor_main();
+  test_copy_constructor_main();
+  test_assignment_operator_main();
   test_addition();
 }

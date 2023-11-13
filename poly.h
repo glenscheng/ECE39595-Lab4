@@ -52,6 +52,12 @@ class polynomial
     map<power, coeff> get_poly() { return poly; }
 
     /**
+     * @brief Clear map
+     *
+     */
+    void clear_poly() { poly.clear(); }
+
+    /**
      * @brief Prints the polynomial.
      *
      * Only used for debugging, isn't graded.
