@@ -2,7 +2,9 @@
 #include "poly.h"
 
 // Construct a new polynomial object that is the number 0 (ie. 0x^0)
-polynomial::polynomial() {}
+polynomial::polynomial(void) {
+  poly.insert( {0,0} );
+}
 
 // Copy constructor 
 polynomial::polynomial(const polynomial &other) {}

@@ -33,8 +33,7 @@ class polynomial
      * @param end
      *  The end of the container to copy elements from
      */
-    template <typename Iter>
-    polynomial(Iter begin, Iter end);
+    template <typename Iter> polynomial(Iter begin, Iter end);
 
     /**
      * @brief Construct a new polynomial object from an existing polynomial object
@@ -161,16 +160,18 @@ class polynomial
 };
 
 // Construct a new polynomial object from an iterator to pairs of <power,coeff>
-template <typename Iter>
-polynomial::polynomial(Iter begin, Iter end) {
-
-    for (Iter p = begin; p != end; p++) {
-
-        // Insert the current power and coefficient pair
-        (this -> poly).insert(*p);
-
+template <typename Iter> polynomial::polynomial(Iter begin, Iter end) {
+  while (begin != end) {
+    // Ignore 0 coefficients
+    if ((*begin).second == 0) {
+      begin++;
+      continue;
     }
-
+    // Insert the current power and coefficient pair
+    poly.insert(*begin);
+    
+    begin++;
+  }
 }
 
 #endif
