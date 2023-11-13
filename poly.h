@@ -44,6 +44,14 @@ class polynomial
     polynomial(const polynomial &other);
 
     /**
+     * @brief Return map
+     *
+     * @return
+     *  The map
+     */
+    map<power, coeff> get_poly() { return poly; }
+
+    /**
      * @brief Prints the polynomial.
      *
      * Only used for debugging, isn't graded.
@@ -157,6 +165,18 @@ class polynomial
      *  A vector of pairs representing the canonical form of the polynomial
      */
     std::vector<std::pair<power, coeff>> canonical_form() const;
+
+    /**
+     * @brief Returns whether the polynomial contains a coeff at a specific power
+     *
+     * @param pwr
+     *  The specific power
+     * @param exp_c
+     *  The expected coeff
+     * @return bool
+     *  Whether the coeffs match
+     */
+    bool check_coeff(power pwr, coeff exp_c);
 };
 
 // Construct a new polynomial object from an iterator to pairs of <power,coeff>

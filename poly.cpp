@@ -2,9 +2,7 @@
 #include "poly.h"
 
 // Construct a new polynomial object that is the number 0 (ie. 0x^0)
-polynomial::polynomial(void) {
-  poly.insert( {0,0} );
-}
+polynomial::polynomial(void) {} // stay as empty map
 
 // Copy constructor 
 polynomial::polynomial(const polynomial &other) {}
@@ -191,4 +189,25 @@ polynomial polynomial::operator*(polynomial& other) {
     }
 
     return result;
+}
+
+// Test method to determine if coeff is correct at a specific power
+bool polynomial::check_coeff(power pwr, coeff exp_c) {
+  // Check that 0 coefficient means that term is not in map
+  if (exp_c == 0 && poly.count(pwr) != 0) {
+    return false;
+  }
+  if (exp_c == 0 && poly.count(pwr) == 0) {
+    return true;
+  }
+  
+  // Check that power is in polynomial
+  if (poly.count(pwr) != 1) {
+    return false;
+  }
+  // Check if expected coeff == actual coeff
+  if (exp_c != poly.at(pwr)) {
+    return false;
+  }
+  return true;
 }
