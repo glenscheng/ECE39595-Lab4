@@ -6,7 +6,7 @@ APP=poly
 
 custom_tests:
 	$(CC) $(C_FLAGS) $(SRC_FILES) main.cpp -o $(APP)
-	./$(APP)
+	valgrind ./$(APP)
 
 valgrind:
 	valgrind --leak-check=full ./$(APP) $(TEST)
