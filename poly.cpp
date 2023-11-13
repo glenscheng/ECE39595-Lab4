@@ -39,11 +39,43 @@ polynomial polynomial::operator+(polynomial& other) {
 
     polynomial result;
 
+	// Initialize pointers to both of the polynomials
+	auto p = (this -> poly).begin();
+	auto q = other.poly.end();
+	auto p_end = (this -> poly).end();
+	auto q_end = other.poly.end();
+
+	// Iterate through both of the polynomials and add up the terms
+	while (p != p_end || q != q_end) {
+
+		// Check if reached the end of one of the polynomials
+		if (p == p_end) {
+			result.poly.insert(std::pair<power, coeff>(q -> first, q -> second));
+			q++;
+		} else if (q == q_end) {
+			result.poly.insert(std::pair<power, coeff>(p -> first, p -> second));
+			p++;
+		} else if (p -> first == q -> first) {
+			result.poly.insert(std::pair<power, coeff>(p -> first, (p -> second) + (q -> second)));
+			p++;
+			q++;
+		} else if (p -> first > q -> first) {
+			result.poly.insert(std::pair<power, coeff>(p -> first, p -> second));
+			p++;
+		} else {
+			result.poly.insert(std::pair<power, coeff>(q -> first, q -> second));
+			q++;
+		}
+
+	}
+	
+	// Return the result
+	/**
     // Check which polynomial has the higer degree
     if ((this -> find_degree_of()) >= other.find_degree_of()) {
 
         // Iterate through all the terms in both of the polynomials
-        for (size_t curr_power = this -> find_degree_of(); curr_power >= 0; curr_power--) {
+        for (int curr_power = this -> find_degree_of(); curr_power >= 0; curr_power--) {
 
             // Check if the polynomials contain the power
             // If power is there, then add up the coefficients.
@@ -70,7 +102,7 @@ polynomial polynomial::operator+(polynomial& other) {
     } else {
         
         // Iterate through all the terms in both of the polynomials
-        for (size_t curr_power = other.find_degree_of(); curr_power >= 0; curr_power--) {
+        for (int curr_power = other.find_degree_of(); curr_power >= 0; curr_power--) {
 
             // Check if the polynomials contain the power
             // If power is there, then add up the coefficients.
@@ -94,7 +126,7 @@ polynomial polynomial::operator+(polynomial& other) {
 
         }
 
-    }
+    }**/
     
     return result;
 }
@@ -107,11 +139,14 @@ polynomial polynomial::operator+(const int i) {
 
     // Don't add zero terms
     if (i != 0) {
+
+        size_t pow = 0;
+
         // Add the constant to the polynomial
-        if (result.poly.find(0) != result.poly.end()) {
-            result.poly[0] = result.poly[0] + i;
+        if (result.poly.find(pow) != result.poly.end()) {
+            result.poly[pow] = result.poly[pow] + i;
         } else {
-            result.poly[0] = i;
+            result.poly[pow] = i;
         }
     }
 
@@ -127,11 +162,14 @@ polynomial operator+(const int i, polynomial& polynomial_object) {
 
     // Don't add zero terms
     if (i != 0) {
+
+        size_t pow = 0;
+
         // Add the constant to the polynomial
-        if (result.poly.find(0) != result.poly.end()) {
-            result.poly[0] = result.poly[0] + i;
+        if (result.poly.find(pow) != result.poly.end()) {
+            result.poly[pow] = result.poly[pow] + i;
         } else {
-            result.poly[0] = i;
+            result.poly[pow] = i;
         }
     }
 
