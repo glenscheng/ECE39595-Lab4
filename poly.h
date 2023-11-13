@@ -101,6 +101,30 @@ public:
     friend polynomial operator+(const int i, const polynomial& polynomial_object);
 
     /**
+     * @brief Multiplies two polynomials (polynomial * polynomial) and returns the result
+     *
+     * @return polynomial
+     *  The result of the addition
+     */
+    polynomial operator*(const polynomial& other) const;  
+
+    /**
+     * @brief Multiplies a polynomial and a number (polynomial * int) and returns the result
+     *
+     * @return polynomial
+     *  The result of the addition
+     */
+    polynomial operator*(const int i) const; 
+
+    /**
+     * @brief Multiplies a number and a polynomial (int * polynomial) and returns the result
+     *
+     * @return polynomial
+     *  The result of the addition
+     */
+    friend polynomial operator*(const int i, const polynomial& polynomial_object);
+
+    /**
      * @brief Returns the degree of the polynomial
      *
      * @return size_t
