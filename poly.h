@@ -141,6 +141,14 @@ class polynomial
      *  The result of the addition
      */
     friend polynomial operator*(const int i, const polynomial& polynomial_object);
+    
+    /**
+     * @brief Finds the modulo of a polynomial and another polynomial (polynomial * int) and returns the result
+     *
+     * @return polynomial
+     *  The result of the addition
+     */
+    polynomial operator%(const polynomial& other) const; 
 
     /**
      * @brief Returns the degree of the polynomial

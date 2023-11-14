@@ -218,6 +218,23 @@ polynomial polynomial::operator*(const polynomial& other) const {
     return result;
 }
 
+// Finds the modulo of a polynomial and another polynomial (polynomial * int) and returns the result
+polynomial polynomial::operator%(const polynomial& other) const {
+    
+    // Create a copy of the current polynomial
+    polynomial result = *this; 
+
+    // Do the long division
+    while (other.find_degree_of() >= result.find_degree_of()) {
+        int multiplication_constant = result.poly[result.find_degree_of()] / (this -> poly)[this -> find_degree_of()];
+        int multiplication_power = result.find_degree_of() - this -> find_degree_of();
+        std::vector<std::pair<power, coeff>> multiplication_polynomial_terms = {{multiplication_power, multiplication_constant}};
+        polynomial multiplication_polynomial = polynomial(multiplication_polynomial_terms.begin(), multiplication_polynomial_terms.end());
+        result = result + (-1 * (other * multiplication_polynomial));
+    }
+
+    return result;
+}
 // Test method to determine if coeff is correct at a specific power
 bool polynomial::check_coeff(power pwr, coeff exp_c) {
   // Check that 0 coefficient means that term is not in map
