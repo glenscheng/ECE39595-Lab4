@@ -219,7 +219,16 @@ polynomial polynomial::operator*(const polynomial& other) const {
 }
 
 // Finds the remainder of a polynomial divided by another polynomial
-polynomial polynomial::operator%(polynomial& other) {
+polynomial polynomial::operator%(const polynomial& other) const {
+  // invert `other` for subtraction
+  // make a copy of `this` that we can change to keep track of the quotient
+
+  // iterate through i + all powers of `other`, i starts at degree of `this` - degree of `other`, i-- until i = initial degree of `other`
+    // divide highest degree coeffs: `this` / `other`, this will be how much you multiply `other` by
+
+    // add quotient and inverse of this new `other` to get new quotient
+  
+  // remainder = dividend - divisor * quotient = `this` - `other` * quotient
 }
 
 // Test method to determine if coeff is correct at a specific power

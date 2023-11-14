@@ -149,7 +149,7 @@ class polynomial
      * @return polynomial
      *  The remainder
      */
-    polynomial operator%(polynomial& other);  
+    polynomial operator%(const polynomial& other) const;  
 
     /**
      * @brief Returns the degree of the polynomial
