@@ -68,7 +68,7 @@ void polynomial::print() const {
 }
 
 // Adds two polynomials (polynomial + polynomial) and returns the result
-polynomial polynomial::operator+(polynomial& other) {
+polynomial polynomial::operator+(const polynomial& other) const {
 
     polynomial result;
 
@@ -114,7 +114,7 @@ polynomial polynomial::operator+(polynomial& other) {
 }
 
 // Adds a polynomial and a number (polynomial + int) and returns the result
-polynomial polynomial::operator+(const int i) {
+polynomial polynomial::operator+(const int i) const {
     
     // Create a copy of the current polynomial
     polynomial result = *this; 
@@ -140,7 +140,7 @@ polynomial polynomial::operator+(const int i) {
 }
 
 // Adds a number and a polynomial (int + polynomial) and returns the result
-polynomial operator+(const int i, polynomial& polynomial_object) {
+polynomial operator+(const int i, const polynomial& polynomial_object) {
     
     // Create a copy of the current polynomial
     polynomial result = polynomial_object; 
@@ -166,7 +166,7 @@ polynomial operator+(const int i, polynomial& polynomial_object) {
 }
 
 // Multiplies a polynomial and a number (polynomial * int) and returns the result
-polynomial polynomial::operator*(const int i) {
+polynomial polynomial::operator*(const int i) const {
 
     polynomial result;
 
@@ -182,7 +182,7 @@ polynomial polynomial::operator*(const int i) {
 }
 
 // Multiplies a polynomial and a number (polynomial * int) and returns the result
-polynomial operator*(const int i, polynomial& polynomial_object) { 
+polynomial operator*(const int i, const polynomial& polynomial_object) { 
     
     polynomial result;
 
@@ -197,7 +197,7 @@ polynomial operator*(const int i, polynomial& polynomial_object) {
 }
 
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
-polynomial polynomial::operator*(polynomial& other) {
+polynomial polynomial::operator*(const polynomial& other) const {
 
     polynomial result;
 
