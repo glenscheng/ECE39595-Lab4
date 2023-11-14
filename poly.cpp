@@ -27,8 +27,23 @@ polynomial& polynomial::operator=(const polynomial &other) {
   return *this;
 }
 
-// Canonical form 
-std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {return std::vector<std::pair<power, coeff>>();}
+// Returns a vector that contains the polynomial is canonical form
+std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {
+    
+    std::vector<std::pair<power, coeff>> result; // Vector containing power and coefficient pairs
+    
+    // Iterate through the polynomial starting from the highest degree
+    for (auto Iter = (this -> poly).rbegin(); Iter != (this -> poly).rend(); Iter++) {
+        result.push_back(*Iter);
+    }
+
+    // If there are no terms in the polynomial, then add (0,0)
+    if ((this -> poly).empty()) {
+        result.push_back(std::pair<power, coeff>(0, 0));
+    }
+
+    return result;
+}
 
 // Returns the degree of the polynomial
 size_t polynomial::find_degree_of() {
@@ -48,11 +63,12 @@ void polynomial::print() const {
         std::cout << "(" << cof << "x^" << pow << ") + ";  
     }
 
-    std::cout << "0" << std::endl;
+	std::cout << std::endl;
+
 }
 
 // Adds two polynomials (polynomial + polynomial) and returns the result
-polynomial polynomial::operator+(polynomial& other) {
+polynomial polynomial::operator+(const polynomial& other) const {
 
     polynomial result;
 
@@ -98,7 +114,7 @@ polynomial polynomial::operator+(polynomial& other) {
 }
 
 // Adds a polynomial and a number (polynomial + int) and returns the result
-polynomial polynomial::operator+(const int i) {
+polynomial polynomial::operator+(const int i) const {
     
     // Create a copy of the current polynomial
     polynomial result = *this; 
@@ -124,7 +140,7 @@ polynomial polynomial::operator+(const int i) {
 }
 
 // Adds a number and a polynomial (int + polynomial) and returns the result
-polynomial operator+(const int i, polynomial& polynomial_object) {
+polynomial operator+(const int i, const polynomial& polynomial_object) {
     
     // Create a copy of the current polynomial
     polynomial result = polynomial_object; 
@@ -150,7 +166,7 @@ polynomial operator+(const int i, polynomial& polynomial_object) {
 }
 
 // Multiplies a polynomial and a number (polynomial * int) and returns the result
-polynomial polynomial::operator*(const int i) {
+polynomial polynomial::operator*(const int i) const {
 
     polynomial result;
 
@@ -166,7 +182,7 @@ polynomial polynomial::operator*(const int i) {
 }
 
 // Multiplies a polynomial and a number (polynomial * int) and returns the result
-polynomial operator*(const int i, polynomial& polynomial_object) { 
+polynomial operator*(const int i, const polynomial& polynomial_object) { 
     
     polynomial result;
 
@@ -181,7 +197,7 @@ polynomial operator*(const int i, polynomial& polynomial_object) {
 }
 
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
-polynomial polynomial::operator*(polynomial& other) {
+polynomial polynomial::operator*(const polynomial& other) const {
 
     polynomial result;
 
