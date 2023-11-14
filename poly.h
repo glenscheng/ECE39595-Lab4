@@ -101,7 +101,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator+(polynomial& other);  
+    polynomial operator+(const polynomial& other) const;  
 
     /**
      * @brief Adds a polynomial and a number (polynomial + int) and returns the result
@@ -109,7 +109,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator+(const int i); 
+    polynomial operator+(const int i) const; 
 
     /**
      * @brief Adds a number and a polynomial (int + polynomial) and returns the result
@@ -117,7 +117,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    friend polynomial operator+(const int i, polynomial& polynomial_object);
+    friend polynomial operator+(const int i, const polynomial& polynomial_object);
 
     /**
      * @brief Multiplies two polynomials (polynomial * polynomial) and returns the result
@@ -125,7 +125,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator*(polynomial& other);  
+    polynomial operator*(const polynomial& other) const;  
 
     /**
      * @brief Multiplies a polynomial and a number (polynomial * int) and returns the result
@@ -133,7 +133,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator*(const int i); 
+    polynomial operator*(const int i) const; 
 
     /**
      * @brief Multiplies a number and a polynomial (int * polynomial) and returns the result
@@ -141,7 +141,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    friend polynomial operator*(const int i, polynomial& polynomial_object);
+    friend polynomial operator*(const int i, const polynomial& polynomial_object);
 
     /**
      * @brief Finds the remainder of a polynomial divided by another polynomial
