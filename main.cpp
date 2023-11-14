@@ -6,6 +6,7 @@
 #include "poly.h"
 #include "test_addition.h"
 #include "test_canonical_form.h"
+#include "test_multiplication.h"
 
 std::optional<double> poly_test(polynomial& p1,
                                 polynomial& p2,
@@ -63,4 +64,5 @@ int main()
   test_assignment_operator_main();
   test_addition();
   test_canonical_form();
+  test_multiplication();
 }

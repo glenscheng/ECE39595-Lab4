@@ -63,7 +63,8 @@ void polynomial::print() const {
         std::cout << "(" << cof << "x^" << pow << ") + ";  
     }
 
-    std::cout << "0" << std::endl;
+	std::cout << std::endl;
+
 }
 
 // Adds two polynomials (polynomial + polynomial) and returns the result
