@@ -27,8 +27,23 @@ polynomial& polynomial::operator=(const polynomial &other) {
   return *this;
 }
 
-// Canonical form 
-std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {return std::vector<std::pair<power, coeff>>();}
+// Returns a vector that contains the polynomial is canonical form
+std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {
+    
+    std::vector<std::pair<power, coeff>> result; // Vector containing power and coefficient pairs
+    
+    // Iterate through the polynomial starting from the highest degree
+    for (auto Iter = (this -> poly).rbegin(); Iter != (this -> poly).rend(); Iter++) {
+        result.push_back(*Iter);
+    }
+
+    // If there are no terms in the polynomial, then add (0,0)
+    if ((this -> poly).empty()) {
+        result.push_back(std::pair<power, coeff>(0, 0));
+    }
+
+    return result;
+}
 
 // Returns the degree of the polynomial
 size_t polynomial::find_degree_of() {
