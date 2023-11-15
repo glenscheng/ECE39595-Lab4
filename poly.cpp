@@ -46,7 +46,7 @@ std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {
 }
 
 // Returns the degree of the polynomial
-size_t polynomial::find_degree_of() {
+size_t polynomial::find_degree_of() const {
     if (!((this -> poly).empty())) {
         return (this -> poly).rbegin() -> first; 
     } else {
@@ -222,12 +222,13 @@ polynomial polynomial::operator*(const polynomial& other) const {
 polynomial polynomial::operator%(const polynomial& other) const {
     
     // Create a copy of the current polynomial
-    polynomial result = *this; 
+    polynomial result = *this;
+    polynomial p = *this;
 
     // Do the long division
     while (other.find_degree_of() >= result.find_degree_of()) {
-        int multiplication_constant = result.poly[result.find_degree_of()] / (this -> poly)[this -> find_degree_of()];
-        int multiplication_power = result.find_degree_of() - this -> find_degree_of();
+        int multiplication_constant = result.poly[result.find_degree_of()] / p.poly[p.find_degree_of()];
+        int multiplication_power = result.find_degree_of() - p.find_degree_of();
         std::vector<std::pair<power, coeff>> multiplication_polynomial_terms = {{multiplication_power, multiplication_constant}};
         polynomial multiplication_polynomial = polynomial(multiplication_polynomial_terms.begin(), multiplication_polynomial_terms.end());
         result = result + (-1 * (other * multiplication_polynomial));
