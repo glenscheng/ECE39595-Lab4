@@ -1,12 +1,7 @@
 #include <map>
-#include <iostream>
 #include "poly.h"
 
 using std::map;
-
-using std::cout;
-using std::endl;
-
 
 // Construct a new polynomial object that is the number 0 (ie. 0x^0)
 polynomial::polynomial(void) {} // stay as empty map
@@ -235,13 +230,9 @@ polynomial polynomial::operator%(const polynomial& other) const {
         int divisor_degree = divisor.find_degree_of();
         int multiplication_constant = result.poly[result_degree] / divisor.poly[divisor_degree];
         int multiplication_power = result_degree - divisor_degree;
-        //cout << multiplication_power << "," << multiplication_constant << endl;
         std::vector<std::pair<power, coeff>> multiplication_polynomial_terms = {{multiplication_power, multiplication_constant}};
         polynomial multiplication_polynomial = polynomial(multiplication_polynomial_terms.begin(), multiplication_polynomial_terms.end());
-        multiplication_polynomial.print();
         result = result + (-1 * (other * multiplication_polynomial));
-        //cout << "print: ";
-        //result.print();
     }
 
     return result;
