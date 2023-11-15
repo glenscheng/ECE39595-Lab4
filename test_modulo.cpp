@@ -45,7 +45,7 @@ static void simple() {
 // p1 % p2 != 0
 static void complex1() {
   cout << "------------------------------------------" << endl;
-  cout << "Starting test for modulo: 4x^4 + 6x^2 + 8x + 1 mod 2x = 0." << endl;
+  cout << "Starting test for modulo: 4x^4 + 6x^2 + 8x + 1 mod 2x = 1." << endl;
 
   // initialize
   int passed = 0;
