@@ -49,7 +49,7 @@ class polynomial
      * @return
      *  The map
      */
-    map<power, coeff> get_poly() { return poly; }
+    map<power, coeff> get_poly() const { return poly; }
 
     /**
      * @brief Clear map
