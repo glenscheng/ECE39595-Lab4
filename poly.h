@@ -120,7 +120,7 @@ class polynomial
 
     /**
      * @brief Multiplies two polynomials (polynomial * polynomial) and returns the result
-     *
+     *i
      * @return polynomial
      *  The result of the addition
      */

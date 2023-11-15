@@ -1,12 +1,15 @@
 #include <map>
 #include <vector>
 #include <thread>
+#include <iostream>
 #include "poly.h"
 
 using std::vector;
 using std::map;
 using std::thread;
 using std::ref;
+using std::cout;
+using std::endl;
 
 // Construct a new polynomial object that is the number 0 (ie. 0x^0)
 polynomial::polynomial(void) {} // stay as empty map
@@ -200,9 +203,14 @@ polynomial operator*(const int i, const polynomial& polynomial_object) {
   return result;
 }
 
-static void multiply_term(power curr_power, coeff curr_coeff, const polynomial other, polynomial &temp, int k) {
-  for (auto other_iter = other.get_poly().begin(); other_iter != other.get_poly().end(); other_iter++) {
-    temp.get_poly()[curr_power + (other_iter -> first)] = curr_coeff * (other_iter -> second);
+void multiply_term(power curr_power, coeff curr_coeff, const polynomial other, polynomial &temp, int k) {
+  auto other_begin = other.get_poly().begin();
+  auto other_end = other.get_poly().end();
+  while (other_begin != other_end) {
+    temp.get_poly()[curr_power + (*other_begin).first] = curr_coeff * (*other_begin).second;
+    cout << (*other_begin).first << "," << (*other_begin).second << endl;
+    temp.print();
+    other_begin++;
   }
 }
 
@@ -223,7 +231,8 @@ polynomial polynomial::operator*(const polynomial& other) const {
   vector<thread> threads;
   int i = 0;
   for (auto iter = (this -> poly).begin(); iter != (this -> poly).end(); iter++) {
-    threads.push_back(thread(multiply_term, iter->first, iter->second, other, ref(temps.at(i)), k));
+    polynomial other_copy = other;
+    threads.push_back(thread(multiply_term, iter->first, iter->second, other_copy, ref(temps.at(i)), k));
     threads.at(i);
     i++;
   }
