@@ -207,7 +207,7 @@ void multiply_term(power curr_power, coeff curr_coeff, const polynomial other, p
   auto other_begin = other.get_poly().begin();
   auto other_end = other.get_poly().end();
   while (other_begin != other_end) {
-    temp.get_poly()[curr_power + (*other_begin).first] = curr_coeff * (*other_begin).second;
+    temp.insert_poly(curr_power + (*other_begin).first, curr_coeff * (*other_begin).second);
     cout << (*other_begin).first << "," << (*other_begin).second << endl;
     temp.print();
     other_begin++;
@@ -249,8 +249,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
   }
 
   return result;
-
-/*
+  /*
   polynomial result;
 
   // Iterate through all the terms in the first polynomial 

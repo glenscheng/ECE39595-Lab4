@@ -26,7 +26,7 @@ class polynomial
     /**
      * @brief Construct a new polynomial object from an iterator to pairs of <power,coeff>
      *
-     * @tparam Iter
+     * @param Iter
      *  An iterator that points to a std::pair<power, coeff>
      * @param begin
      *  The start of the container to copy elements from
@@ -56,6 +56,17 @@ class polynomial
      *
      */
     void clear_poly() { poly.clear(); }
+
+
+    /**
+     * @brief Insert key value pair into map
+     *
+     * @param p
+     *  Key of insertion
+     * @param c
+     *  Value of insertion
+     */
+    void insert_poly(power p, coeff c) { poly.insert({p,c}); }
 
     /**
      * @brief Prints the polynomial.
