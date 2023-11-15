@@ -35,6 +35,7 @@ std::optional<double> poly_test(polynomial& p1,
 void test_constructor_main();
 void test_copy_constructor_main();
 void test_assignment_operator_main();
+void test_modulo_main();
 
 int main()
 {
@@ -65,4 +66,5 @@ int main()
   test_addition();
   test_canonical_form();
   test_multiplication();
+  test_modulo_main();
 }
