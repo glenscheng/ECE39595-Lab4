@@ -146,9 +146,45 @@ static void complex3() {
   result.print();
   cout << endl;
 
-  // check that result = x + 2
+  // check that result = 11x
   pwr = 1;
   exp_coeff = 11;
+  if (result.check_coeff(pwr, exp_coeff) == true) {
+    passed++;
+  } else {
+    cout << "* * FAILED * * coeff of power " << pwr << "is incorrect" << endl;
+  }
+  num_tests++;
+
+  cout << "\033[0;32mPassed\033[0m (" << passed << "/" << num_tests << ")" << endl;
+}
+
+// p1 % p2 = p1
+static void same() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for modulo: 1 mod x." << endl;
+
+  // initialize
+  int passed = 0;
+  int num_tests = 0;
+  vector<pair<power, coeff>> poly_input1 = {{0,1}};
+  vector<pair<power, coeff>> poly_input2 = {{1,1}};
+  polynomial p1(poly_input1.begin(), poly_input1.end());
+  polynomial p2(poly_input2.begin(), poly_input2.end());
+  power pwr;
+  coeff exp_coeff;
+  
+  // act
+  polynomial result = p1 % p2;
+
+  // print
+  cout << "Print result: ";
+  result.print();
+  cout << endl;
+
+  // check that result = 1
+  pwr = 0;
+  exp_coeff = 1;
   if (result.check_coeff(pwr, exp_coeff) == true) {
     passed++;
   } else {
@@ -167,5 +203,6 @@ void test_modulo_main() {
   complex1();
   complex2();
   complex3();
+  same();
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
