@@ -251,6 +251,8 @@ polynomial polynomial::operator*(const polynomial& other) const {
 
   return result;
 */
+
+  // SEQUENTIAL
   polynomial result;
 
   // Iterate through all the terms in the first polynomial 
@@ -280,7 +282,6 @@ polynomial polynomial::operator%(const polynomial& other) const {
 
   // Do the long division
   while (other.find_degree_of() <= result.find_degree_of()) {
-    polynomial prev_result = result;
     int result_degree = result.find_degree_of();
     int divisor_degree = divisor.find_degree_of();
     int multiplication_constant = result.poly[result_degree] / divisor.poly[divisor_degree];
@@ -288,7 +289,7 @@ polynomial polynomial::operator%(const polynomial& other) const {
     std::vector<std::pair<power, coeff>> multiplication_polynomial_terms = {{multiplication_power, multiplication_constant}};
     polynomial multiplication_polynomial = polynomial(multiplication_polynomial_terms.begin(), multiplication_polynomial_terms.end());
     result = result + (-1 * (other * multiplication_polynomial));
-    if (prev_result.find_degree_of() == result.find_degree_of()) {
+    if (result.poly.empty() == true) {
       break;
     }
     result.print();
