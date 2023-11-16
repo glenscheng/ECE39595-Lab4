@@ -216,6 +216,7 @@ void multiply_term(power curr_power, coeff curr_coeff, const polynomial other, p
 
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
 polynomial polynomial::operator*(const polynomial& other) const {
+  /*
   polynomial zero;
   int size = this->poly.size();
   vector<polynomial> temps(size);
@@ -249,7 +250,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
   }
 
   return result;
-  /*
+*/
   polynomial result;
 
   // Iterate through all the terms in the first polynomial 
@@ -267,11 +268,10 @@ polynomial polynomial::operator*(const polynomial& other) const {
   }
 
   return result;
-*/
 
 }
 
-// Finds the modulo of a polynomial and another polynomial (polynomial * int) and returns the result
+// Finds the modulo of a polynomial and another polynomial (polynomial % polynomial) and returns the result
 polynomial polynomial::operator%(const polynomial& other) const {
 
   // Create a copy of the current polynomial
@@ -280,6 +280,7 @@ polynomial polynomial::operator%(const polynomial& other) const {
 
   // Do the long division
   while (other.find_degree_of() <= result.find_degree_of()) {
+    polynomial prev_result = result;
     int result_degree = result.find_degree_of();
     int divisor_degree = divisor.find_degree_of();
     int multiplication_constant = result.poly[result_degree] / divisor.poly[divisor_degree];
@@ -287,6 +288,10 @@ polynomial polynomial::operator%(const polynomial& other) const {
     std::vector<std::pair<power, coeff>> multiplication_polynomial_terms = {{multiplication_power, multiplication_constant}};
     polynomial multiplication_polynomial = polynomial(multiplication_polynomial_terms.begin(), multiplication_polynomial_terms.end());
     result = result + (-1 * (other * multiplication_polynomial));
+    if (prev_result.find_degree_of() == result.find_degree_of()) {
+      break;
+    }
+    result.print();
   }
 
   return result;
