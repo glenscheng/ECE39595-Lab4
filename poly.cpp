@@ -241,9 +241,6 @@ polynomial polynomial::operator%(const polynomial& other) const {
     std::vector<std::pair<power, coeff>> multiplication_polynomial_terms = {{multiplication_power, multiplication_constant}};
     polynomial multiplication_polynomial = polynomial(multiplication_polynomial_terms.begin(), multiplication_polynomial_terms.end());
     result = result + (-1 * (other * multiplication_polynomial));
-    if (result.poly.empty() == true) {
-      break;
-    }
   }
 
   return result;
