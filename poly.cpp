@@ -203,9 +203,52 @@ polynomial operator*(const int i, const polynomial& polynomial_object) {
   return result;
 }
 
+// Function for threading
+static void multiply_terms(power this_power, coeff this_coeff, power other_power, coeff other_coeff, polynomial &temp) {
+  temp.insert_poly(this_power + other_power, this_coeff * other_coeff);
+}
+
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
 polynomial polynomial::operator*(const polynomial& other) const {
 
+  // PARALLEL
+  polynomial zero;
+  int size = (*this).poly.size() * other.poly.size();
+  vector<polynomial> temps(size, zero); // initialize temps vector to all 0 polynomials
+
+  // initialize threads vector AND call threads
+  vector<thread> threads;
+  int i = 0;
+  auto this_end = (*this).poly.rend();
+  auto other_end = other.poly.rend();
+  for (auto this_iter = (*this).poly.rbegin(); this_iter != this_end; this_iter++) {
+    for (auto other_iter = other.poly.rbegin(); other_iter != other_end; other_iter++) {
+      power this_power = (*this_iter).first;
+      coeff this_coeff = (*this_iter).second;
+      power other_power = (*other_iter).first;
+      coeff other_coeff = (*other_iter).second;
+      // cout << "(before calling threads) this: " << this_coeff << "x^" << this_power << ", other: " << other_coeff << "x^" << other_power << endl;
+      threads.push_back(thread(multiply_terms, this_power, this_coeff, other_power, other_coeff, ref(temps.at(i))));
+      //threads.push_back(thread(multiply_terms, this_power, this_coeff, other_power, other_coeff, ref(result)));
+      threads.at(i);
+      i++;
+    }
+  }
+
+  // wait for threads to finish
+  for (int i = 0; i < size; i++) {
+    threads.at(i).join();
+  }
+
+  // sum temps for result
+  polynomial result;
+  for (polynomial p : temps) {
+    result = result + p;
+  }
+
+  return result;
+
+/*  // SEQUENTIAL
   polynomial result;
 
   // Iterate through all the terms in the first polynomial 
@@ -223,6 +266,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
   }
 
   return result;
+*/
 }
 
 // Finds the modulo of a polynomial and another polynomial (polynomial % polynomial) and returns the result
