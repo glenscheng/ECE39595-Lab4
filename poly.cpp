@@ -204,9 +204,9 @@ polynomial operator*(const int i, const polynomial& polynomial_object) {
 }
 
 // Function for threading
-static void multiply_terms(power this_power, coeff this_coeff, power other_power, coeff other_coeff, polynomial &temp) {
-  temp.insert_poly(this_power + other_power, this_coeff * other_coeff);
-}
+//static void multiply_terms(power this_power, coeff this_coeff, power other_power, coeff other_coeff, polynomial &temp) {
+//  temp.insert_poly(this_power + other_power, this_coeff * other_coeff);
+//}
 static void multiply_terms_4(map<power, coeff> this_vals, map<power, coeff> other_vals, polynomial &temp) {
   // Iterate through all the terms in the first polynomial 
   auto this_end = this_vals.rend();
@@ -408,3 +408,120 @@ bool polynomial::check_coeff(power pwr, coeff exp_c) {
   }
   return true;
 }
+
+
+polynomial test_multiply_parallel_4(polynomial p1, polynomial p2) {
+  polynomial zero;
+  if (p1.poly.empty() == true || p2.poly.empty() == true) {
+    return zero;
+  }
+
+  // PARALLEL (threads = 4)
+  int size = 4; // using only 4 threads
+  int this_terms_per_thread = p1.poly.size() / size;
+  vector<polynomial> temps(size, zero); // initialize temps vector to all 0 polynomials
+
+  // create vectors for powers and coeffs for `other`
+  map<power, coeff> other_vals1;
+  map<power, coeff> other_vals2;
+  map<power, coeff> other_vals3;
+  map<power, coeff> other_vals4;
+  auto other_end = p2.poly.rend();
+  for (auto other_iter = p2.poly.rbegin(); other_iter != other_end; other_iter++) {
+    power other_power = (*other_iter).first;
+    coeff other_coeff = (*other_iter).second;
+    other_vals1.insert({other_power, other_coeff});
+    other_vals2.insert({other_power, other_coeff});
+    other_vals3.insert({other_power, other_coeff});
+    other_vals4.insert({other_power, other_coeff});
+  }
+
+  // create vectors for powers and coeffs for `this` / 4
+  auto this_iter = p1.poly.rbegin();
+  auto this_end = p1.poly.rend();
+  // for 1st thread:
+  map<power, coeff> this_vals1;
+  int i = 0;
+  while (i < this_terms_per_thread) {
+    this_vals1.insert({(*this_iter).first, (*this_iter).second});
+    i++;
+    this_iter++;
+  }
+  // for 2nd thread:
+  map<power, coeff> this_vals2;
+  i = 0;
+  while (i < this_terms_per_thread) {
+    this_vals2.insert({(*this_iter).first, (*this_iter).second});
+    i++;
+    this_iter++;
+  }
+  // for 3rd thread:
+  map<power, coeff> this_vals3;
+  i = 0;
+  while (i < this_terms_per_thread) {
+    this_vals3.insert({(*this_iter).first, (*this_iter).second});
+    i++;
+    this_iter++;
+  }
+  // for 4th thread:
+  map<power, coeff> this_vals4;
+  while (this_iter != this_end) {
+    this_vals4.insert({(*this_iter).first, (*this_iter).second});
+    this_iter++;
+  }
+
+  // initialize threads vector AND call threads
+  vector<thread> threads;
+  i = 0;
+  threads.push_back(thread(multiply_terms_4, this_vals1, other_vals1, ref(temps.at(i))));
+  threads.at(i);
+  i++;
+  threads.push_back(thread(multiply_terms_4, this_vals2, other_vals2, ref(temps.at(i))));
+  threads.at(i);
+  i++;
+  threads.push_back(thread(multiply_terms_4, this_vals3, other_vals3, ref(temps.at(i))));
+  threads.at(i);
+  i++;
+  threads.push_back(thread(multiply_terms_4, this_vals4, other_vals4, ref(temps.at(i))));
+  threads.at(i);
+
+  // wait for threads to finish
+  for (int i = 0; i < size; i++) {
+    threads.at(i).join();
+  }
+
+  // sum temps for result
+  polynomial result;
+  for (polynomial p : temps) {
+    result = result + p;
+  }
+
+  return result;
+}
+
+polynomial test_multiply_sequential(polynomial p1, polynomial p2) {
+  polynomial zero;
+  if (p1.poly.empty() == true || p2.poly.empty() == true) {
+    return zero;
+  }
+
+  // SEQUENTIAL
+  polynomial result;
+
+  // Iterate through all the terms in the first polynomial 
+  for (auto p1_iter = p1.poly.begin(); p1_iter != p1.poly.end(); p1_iter++) {
+
+    // Temporary polynomial for individual sums 
+    polynomial temp;
+
+    // Iterate through all the terms in the second polynomial
+    for (auto p2_iter = p2.poly.begin(); p2_iter != p2.poly.end(); p2_iter++) {
+      temp.poly[(p1_iter -> first) + (p2_iter -> first)] = (p1_iter -> second) * (p2_iter -> second);
+    }
+
+    result = result + temp;
+  }
+
+  return result;
+}
+

@@ -36,6 +36,7 @@ void test_constructor_main();
 void test_copy_constructor_main();
 void test_assignment_operator_main();
 void test_modulo_main();
+void test_threads_main();
 
 int main()
 {
@@ -67,4 +68,5 @@ int main()
   test_canonical_form();
   test_multiplication();
   test_modulo_main();
+  test_threads_main();
 }

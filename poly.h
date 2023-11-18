@@ -202,6 +202,10 @@ class polynomial
      *  Whether the coeffs match
      */
     bool check_coeff(power pwr, coeff exp_c);
+
+
+    friend polynomial test_multiply_parallel_4(polynomial p1, polynomial p2);
+    friend polynomial test_multiply_sequential(polynomial p1, polynomial p2);
 };
 
 // Construct a new polynomial object from an iterator to pairs of <power,coeff>
