@@ -10,132 +10,6 @@ using std::vector;
 using std::pair;
 
 
-/*
-// Function for threading
-static void multiply_terms(power this_power, coeff this_coeff, power other_power, coeff other_coeff, polynomial &temp) {
-  temp.insert_poly(this_power + other_power, this_coeff * other_coeff);
-}
-static void multiply_terms_4(map<power, coeff> this_vals, map<power, coeff> other_vals, polynomial &temp) {
-  // Iterate through all the terms in the first polynomial 
-  auto this_end = this_vals.rend();
-  auto other_end = other_vals.rend();
-  for (auto this_iter = this_vals.rbegin(); this_iter != this_end; this_iter++) {
-    polynomial t;
-    // Iterate through all the terms in the second polynomial
-    for (auto other_iter = other_vals.rbegin(); other_iter != other_end; other_iter++) {
-      t.insert_poly((*this_iter).first + (*other_iter).first, (*this_iter).second * (*other_iter).second);
-    }
-    temp = temp + t;
-  }
-}
-
-polynomial test_multiply_parallel_4(polynomial p1, polynomial p2) {
-  // PARALLEL (threads = 4)
-  polynomial zero;
-  int size = 4; // using only 4 threads
-  int this_terms_per_thread = p1.poly.size() / size;
-  vector<polynomial> temps(size, zero); // initialize temps vector to all 0 polynomials
-
-  // create vectors for powers and coeffs for `other`
-  map<power, coeff> other_vals1;
-  map<power, coeff> other_vals2;
-  map<power, coeff> other_vals3;
-  map<power, coeff> other_vals4;
-  auto other_end = p2.poly.rend();
-  for (auto other_iter = p2.poly.rbegin(); other_iter != other_end; other_iter++) {
-    power other_power = (*other_iter).first;
-    coeff other_coeff = (*other_iter).second;
-    other_vals1.insert({other_power, other_coeff});
-    other_vals2.insert({other_power, other_coeff});
-    other_vals3.insert({other_power, other_coeff});
-    other_vals4.insert({other_power, other_coeff});
-  }
-
-  // create vectors for powers and coeffs for `this` / 4
-  auto this_iter = p1.poly.rbegin();
-  auto this_end = p1.poly.rend();
-  // for 1st thread:
-  map<power, coeff> this_vals1;
-  int i = 0;
-  while (i < this_terms_per_thread) {
-    this_vals1.insert({(*this_iter).first, (*this_iter).second});
-    i++;
-    this_iter++;
-  }
-  // for 2nd thread:
-  map<power, coeff> this_vals2;
-  i = 0;
-  while (i < this_terms_per_thread) {
-    this_vals2.insert({(*this_iter).first, (*this_iter).second});
-    i++;
-    this_iter++;
-  }
-  // for 3rd thread:
-  map<power, coeff> this_vals3;
-  i = 0;
-  while (i < this_terms_per_thread) {
-    this_vals3.insert({(*this_iter).first, (*this_iter).second});
-    i++;
-    this_iter++;
-  }
-  // for 4th thread:
-  map<power, coeff> this_vals4;
-  while (this_iter != this_end) {
-    this_vals4.insert({(*this_iter).first, (*this_iter).second});
-    this_iter++;
-  }
-
-  // initialize threads vector AND call threads
-  vector<thread> threads;
-  i = 0;
-  threads.push_back(thread(multiply_terms_4, this_vals1, other_vals1, ref(temps.at(i))));
-  threads.at(i);
-  i++;
-  threads.push_back(thread(multiply_terms_4, this_vals2, other_vals2, ref(temps.at(i))));
-  threads.at(i);
-  i++;
-  threads.push_back(thread(multiply_terms_4, this_vals3, other_vals3, ref(temps.at(i))));
-  threads.at(i);
-  i++;
-  threads.push_back(thread(multiply_terms_4, this_vals4, other_vals4, ref(temps.at(i))));
-  threads.at(i);
-
-  // wait for threads to finish
-  for (int i = 0; i < size; i++) {
-    threads.at(i).join();
-  }
-
-  // sum temps for result
-  polynomial result;
-  for (polynomial p : temps) {
-    result = result + p;
-  }
-
-  return result;
-}
-
-polynomial test_multiply_sequential(polynomial p1, polynomial p2) {
-  // SEQUENTIAL
-  polynomial result;
-
-  // Iterate through all the terms in the first polynomial 
-  for (auto p1_iter = p1.poly.begin(); p1_iter != p1.poly.end(); p1_iter++) {
-
-    // Temporary polynomial for individual sums 
-    polynomial temp;
-
-    // Iterate through all the terms in the second polynomial
-    for (auto p2_iter = p2.poly.begin(); p2_iter != p2.poly.end(); p2_iter++) {
-      temp.poly[(p1_iter -> first) + (p2_iter -> first)] = (p1_iter -> second) * (p2_iter -> second);
-    }
-
-    result = result + temp;
-  }
-
-  return result;
-}
-*/
-
 static void CompareSequentialVsParallel(polynomial p1, polynomial p2){
   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
   test_multiply_sequential(p1, p2);
@@ -656,6 +530,135 @@ static void twentyfour_zero() {
   CompareSequentialVsParallel(p2, p1);
 }
 
+// 30x30
+static void thirties() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for threads: 30x30." << endl;
+
+  // initialize
+  vector<pair<power, coeff>> poly_input = {{29,1},{28,1},{27,1},{26,1},{25,1},{24,1},{23,1},{22,1},{21,1},{20,1},{19,1},{18,1},{17,1},{16,1},{15,1},{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  polynomial p(poly_input.begin(), poly_input.end());
+
+  // print 
+  cout << "Multiplying: ";
+  p.print();
+  cout << " * ";
+  p.print();
+  cout << "Total terms:" << p.get_poly().size() * p.get_poly().size() << endl << endl;
+  
+  // act
+  CompareSequentialVsParallel(p, p);
+}
+
+// 60x20
+static void sixty_twenty() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for threads: 60x20." << endl;
+
+  // initialize
+  vector<pair<power, coeff>> poly_input1 = {{20,1},{19,1},{18,1},{17,1},{16,1},{15,1},{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  vector<pair<power, coeff>> poly_input2 = {{59,1},{58,1},{57,1},{56,1},{55,1},{54,1},{53,1},{52,1},{51,1},{50,1},{49,1},{48,1},{47,1},{46,1},{45,1},{44,1},{43,1},{42,1},{41,1},{40,1},{39,1},{38,1},{37,1},{36,1},{35,1},{34,1},{33,1},{32,1},{31,1},{30,1},{29,1},{28,1},{27,1},{26,1},{25,1},{24,1},{23,1},{22,1},{21,1},{20,1},{19,1},{18,1},{17,1},{16,1},{15,1},{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  polynomial p1(poly_input1.begin(), poly_input1.end());
+  polynomial p2(poly_input2.begin(), poly_input2.end());
+
+  // print 
+  cout << "Multiplying: ";
+  p2.print();
+  cout << " * ";
+  p1.print();
+  cout << "Total terms:" << p1.get_poly().size() * p2.get_poly().size() << endl << endl;
+  
+  // act
+  CompareSequentialVsParallel(p2, p1);
+}
+
+// 20x60
+static void twenty_sixty() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for threads: 20x60." << endl;
+
+  // initialize
+  vector<pair<power, coeff>> poly_input1 = {{59,1},{58,1},{57,1},{56,1},{55,1},{54,1},{53,1},{52,1},{51,1},{50,1},{49,1},{48,1},{47,1},{46,1},{45,1},{44,1},{43,1},{42,1},{41,1},{40,1},{39,1},{38,1},{37,1},{36,1},{35,1},{34,1},{33,1},{32,1},{31,1},{30,1},{29,1},{28,1},{27,1},{26,1},{25,1},{24,1},{23,1},{22,1},{21,1},{20,1},{19,1},{18,1},{17,1},{16,1},{15,1},{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  vector<pair<power, coeff>> poly_input2 = {{20,1},{19,1},{18,1},{17,1},{16,1},{15,1},{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  polynomial p1(poly_input1.begin(), poly_input1.end());
+  polynomial p2(poly_input2.begin(), poly_input2.end());
+
+  // print 
+  cout << "Multiplying: ";
+  p2.print();
+  cout << " * ";
+  p1.print();
+  cout << "Total terms:" << p1.get_poly().size() * p2.get_poly().size() << endl << endl;
+  
+  // act
+  CompareSequentialVsParallel(p2, p1);
+}
+
+// 2x60
+static void two_sixty() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for threads: 2x60." << endl;
+
+  // initialize
+  vector<pair<power, coeff>> poly_input1 = {{59,1},{58,1},{57,1},{56,1},{55,1},{54,1},{53,1},{52,1},{51,1},{50,1},{49,1},{48,1},{47,1},{46,1},{45,1},{44,1},{43,1},{42,1},{41,1},{40,1},{39,1},{38,1},{37,1},{36,1},{35,1},{34,1},{33,1},{32,1},{31,1},{30,1},{29,1},{28,1},{27,1},{26,1},{25,1},{24,1},{23,1},{22,1},{21,1},{20,1},{19,1},{18,1},{17,1},{16,1},{15,1},{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  vector<pair<power, coeff>> poly_input2 = {{1,1},{0,1}};
+  polynomial p1(poly_input1.begin(), poly_input1.end());
+  polynomial p2(poly_input2.begin(), poly_input2.end());
+
+  // print 
+  cout << "Multiplying: ";
+  p2.print();
+  cout << " * ";
+  p1.print();
+  cout << "Total terms:" << p1.get_poly().size() * p2.get_poly().size() << endl << endl;
+  
+  // act
+  CompareSequentialVsParallel(p2, p1);
+}
+
+// 15x60
+static void fifteen_sixty() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for threads: 15x60." << endl;
+
+  // initialize
+  vector<pair<power, coeff>> poly_input1 = {{59,1},{58,1},{57,1},{56,1},{55,1},{54,1},{53,1},{52,1},{51,1},{50,1},{49,1},{48,1},{47,1},{46,1},{45,1},{44,1},{43,1},{42,1},{41,1},{40,1},{39,1},{38,1},{37,1},{36,1},{35,1},{34,1},{33,1},{32,1},{31,1},{30,1},{29,1},{28,1},{27,1},{26,1},{25,1},{24,1},{23,1},{22,1},{21,1},{20,1},{19,1},{18,1},{17,1},{16,1},{15,1},{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  vector<pair<power, coeff>> poly_input2 = {{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  polynomial p1(poly_input1.begin(), poly_input1.end());
+  polynomial p2(poly_input2.begin(), poly_input2.end());
+
+  // print 
+  cout << "Multiplying: ";
+  p2.print();
+  cout << " * ";
+  p1.print();
+  cout << "Total terms:" << p1.get_poly().size() * p2.get_poly().size() << endl << endl;
+  
+  // act
+  CompareSequentialVsParallel(p2, p1);
+}
+
+// 60x60
+static void sixties() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for threads: 60x60." << endl;
+
+  // initialize
+  vector<pair<power, coeff>> poly_input = {{59,1},{58,1},{57,1},{56,1},{55,1},{54,1},{53,1},{52,1},{51,1},{50,1},{49,1},{48,1},{47,1},{46,1},{45,1},{44,1},{43,1},{42,1},{41,1},{40,1},{39,1},{38,1},{37,1},{36,1},{35,1},{34,1},{33,1},{32,1},{31,1},{30,1},{29,1},{28,1},{27,1},{26,1},{25,1},{24,1},{23,1},{22,1},{21,1},{20,1},{19,1},{18,1},{17,1},{16,1},{15,1},{14,1},{13,1},{12,1},{11,1},{10,1},{9,1},{8,1},{7,1},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,1}};
+  polynomial p(poly_input.begin(), poly_input.end());
+
+  // print 
+  cout << "Multiplying: ";
+  p.print();
+  cout << " * ";
+  p.print();
+  cout << "Total terms:" << p.get_poly().size() * p.get_poly().size() << endl << endl;
+  
+  // act
+  CompareSequentialVsParallel(p, p);
+}
+
+
 void test_threads_main() {
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
   cout << "Starting timing test for threads" << endl;
@@ -683,5 +686,11 @@ void test_threads_main() {
   twentyfour_two();
   twentyfour_one();
   twentyfour_zero();
+  thirties();
+  sixty_twenty();
+  twenty_sixty();
+  two_sixty();
+  fifteen_sixty();
+  sixties();
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
