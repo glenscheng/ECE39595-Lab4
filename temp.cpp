@@ -307,3 +307,10 @@ polynomial polynomial::operator*(const polynomial& other) const {
 
   return result;
 */
+
+
+
+// 231120- old function for threading for polynomial * polynomial
+//static void multiply_terms(power this_power, coeff this_coeff, power other_power, coeff other_coeff, polynomial &temp) {
+//  temp.insert_poly(this_power + other_power, this_coeff * other_coeff);
+//}

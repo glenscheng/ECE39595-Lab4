@@ -12,9 +12,9 @@ using std::pair;
 
 static void CompareSequentialVsParallel(polynomial p1, polynomial p2){
   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-  test_multiply_sequential(p1, p2);
+  test_mult_p1_p2_sequential(p1, p2);
   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-  test_multiply_parallel_4(p1, p2);
+  test_mult_p1_p2_parallel_4(p1, p2);
   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
   double duration1 = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
@@ -659,9 +659,9 @@ static void sixties() {
 }
 
 
-void test_threads_main() {
+void test_mult_p1_p2_threads_main() {
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
-  cout << "Starting timing test for threads" << endl;
+  cout << "Starting timing test for threads for polynomial * polynomial" << endl;
   ones();
   twos();
   threes();
