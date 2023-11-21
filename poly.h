@@ -143,7 +143,7 @@ class polynomial
      * @return polynomial
      *  The result of the addition
      */
-    polynomial operator*(const int i) const; 
+    polynomial operator*(const int c) const; 
 
     /**
      * @brief Multiplies a number and a polynomial (int * polynomial) and returns the result
@@ -202,6 +202,12 @@ class polynomial
      *  Whether the coeffs match
      */
     bool check_coeff(power pwr, coeff exp_c);
+
+
+    friend polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2);
+    friend polynomial test_mult_p1_p2_sequential(polynomial p1, polynomial p2);
+    friend polynomial test_mult_p_int_parallel_4(polynomial p, const int c);
+    friend polynomial test_mult_p_int_sequential(polynomial p, const int c);
 };
 
 // Construct a new polynomial object from an iterator to pairs of <power,coeff>
