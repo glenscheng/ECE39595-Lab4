@@ -19,7 +19,7 @@ static void CompareSequentialVsParallel(polynomial p, int c){
 
   double duration1 = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
   double duration2 = std::chrono::duration_cast<std::chrono::microseconds>( t3 - t2 ).count();
-  cout << "Execution time: Sequential: " << duration1 << ", Threads: " << duration2 << std::endl;
+  cout << "Execution time: Sequential: " << duration1 << " us" << ", Threads: " << duration2 << " us" << std::endl;
   cout << "Speedup: " << duration1 / duration2 << endl;
 }
 
@@ -220,6 +220,6 @@ void test_mult_p_int_threads() {
   onehundred();
   fivehundred();
   onethousand();
-  tenthousand();
+  //tenthousand();
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
