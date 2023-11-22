@@ -19,8 +19,17 @@ static void CompareSequentialVsParallel(polynomial p1, polynomial p2){
 
   double duration1 = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
   double duration2 = std::chrono::duration_cast<std::chrono::microseconds>( t3 - t2 ).count();
-  cout << "Execution time: Sequential: " << duration1 << ", Threads: " << duration2 << std::endl;
+  cout << "Execution time: Sequential: " << duration1 << " us" << ", Threads: " << duration2 << " us" << std::endl;
   cout << "Speedup: " << duration1 / duration2 << endl;
+}
+
+static void Parallel(polynomial p1, polynomial p2){
+  std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+  test_mult_p1_p2_parallel_4(p1, p2);
+  std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
+
+  double duration2 = std::chrono::duration_cast<std::chrono::seconds>( t3 - t2 ).count();
+  cout << "Execution time: Threads: " << duration2 << " s" << std::endl;
 }
 
 // 1x1 terms
@@ -658,6 +667,54 @@ static void sixties() {
   CompareSequentialVsParallel(p, p);
 }
 
+// 5,000x5,000
+static void fivethousands() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for threads: 5,000x5,000." << endl;
+
+  // initialize
+  vector<pair<power, coeff>> poly_input;
+  int terms = 5000;
+  for (int i = 0; i < terms; i++) {
+    poly_input.push_back({i,1});
+  }
+  polynomial p(poly_input.begin(), poly_input.end());
+
+  // print 
+  cout << "Multiplying: ";
+  // p.print();
+  cout << " * ";
+  // p.print();
+  cout << "Total terms:" << p.get_poly().size() * p.get_poly().size() << endl << endl;
+  
+  // act
+  Parallel(p, p);
+}
+
+// 25,000x25,000
+static void twentyfivethousands() {
+  cout << "------------------------------------------" << endl;
+  cout << "Starting test for threads: 25,000x25,000." << endl;
+
+  // initialize
+  vector<pair<power, coeff>> poly_input;
+  int terms = 25000;
+  for (int i = 0; i < terms; i++) {
+    poly_input.push_back({i,1});
+  }
+  polynomial p(poly_input.begin(), poly_input.end());
+
+  // print 
+  cout << "Multiplying: ";
+  // p.print();
+  cout << " * ";
+  // p.print();
+  cout << "Total terms:" << p.get_poly().size() * p.get_poly().size() << endl << endl;
+  
+  // act
+  Parallel(p, p);
+}
+
 
 void test_mult_p1_p2_threads_main() {
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
@@ -692,5 +749,7 @@ void test_mult_p1_p2_threads_main() {
   two_sixty();
   fifteen_sixty();
   sixties();
+  //fivethousands();
+  //twentyfivethousands();
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
