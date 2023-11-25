@@ -331,210 +331,16 @@ polynomial polynomial::operator*(const polynomial& other) const {
 
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
 polynomial polynomial::operator*(const polynomial& other) const {
-  polynomial p1 = *this;
-  polynomial p2 = other;
-
-  polynomial result;
-  if (p1.poly.empty() == true || p2.poly.empty() == true) {
-    return result;
-  }
-
-  int p1_size = p1.poly.size();
-  int p2_size = p2.poly.size();
-  if ((p1_size >= 30 && (p1_size / p2_size >= 3)) || ((p1_size * p2_size > 1000) && ((p2_size / p1_size >= 4) || (p1_size / p2_size > 0)))) { // use parallel
-    // PARALLEL (threads = 8)
-    int size = 8; // using only 8 threads
-    int this_terms_per_thread = p1_size / size;
-    vector<polynomial> temps(size, result); // initialize temps vector to all 0 polynomials
-
-    // create vectors for powers and coeffs for `other`
-    unordered_map<power, coeff> other_vals;
-    for (auto p : p2.poly) {
-      other_vals.insert({p.first, p.second});
-    }
-
-    // create vectors for powers and coeffs for `this` / size
-    auto this_iter = p1.poly.begin();
-    auto this_end = p1.poly.end();
-    /* 4 THREADS
-    // for 1st thread:
-    unordered_map<power, coeff> this_vals1;
-    int i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals1.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 2nd thread:
-    unordered_map<power, coeff> this_vals2;
-    i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals2.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 3rd thread:
-    unordered_map<power, coeff> this_vals3;
-    i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals3.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 4th thread:
-    unordered_map<power, coeff> this_vals4;
-    while (this_iter != this_end) {
-      this_vals4.insert({(*this_iter).first, (*this_iter).second});
-      this_iter++;
-    }
-
-    // initialize threads vector AND call threads
-    vector<thread> threads;
-    i = 0;
-    threads.push_back(thread(mult_p1_p2_4, this_vals1, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals2, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals3, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals4, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    */
-
-    // 8 THREADS
-    // for 1st thread:
-    unordered_map<power, coeff> this_vals1;
-    int i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals1.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 2nd thread:
-    unordered_map<power, coeff> this_vals2;
-    i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals2.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 3rd thread:
-    unordered_map<power, coeff> this_vals3;
-    i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals3.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 4th thread:
-    unordered_map<power, coeff> this_vals4;
-    i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals4.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 5th thread:
-    unordered_map<power, coeff> this_vals5;
-    i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals5.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 6th thread:
-    unordered_map<power, coeff> this_vals6;
-    i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals6.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 7th thread:
-    unordered_map<power, coeff> this_vals7;
-    i = 0;
-    while (i < this_terms_per_thread) {
-      this_vals7.insert({(*this_iter).first, (*this_iter).second});
-      i++;
-      this_iter++;
-    }
-    // for 8th thread:
-    unordered_map<power, coeff> this_vals8;
-    while (this_iter != this_end) {
-      this_vals8.insert({(*this_iter).first, (*this_iter).second});
-      this_iter++;
-    }
-
-    // initialize threads vector AND call threads
-    vector<thread> threads;
-    i = 0;
-    threads.push_back(thread(mult_p1_p2_4, this_vals1, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals2, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals3, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals4, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals5, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals6, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals7, other_vals, ref(temps.at(i))));
-    threads.at(i);
-    i++;
-    threads.push_back(thread(mult_p1_p2_4, this_vals8, other_vals, ref(temps.at(i))));
-    threads.at(i);
-
-    // wait for threads to finish
-    for (int i = 0; i < size; i++) {
-      threads.at(i).join();
-    }
-
-    // sum temps for result
-    for (polynomial p : temps) {
-      result = result + p;
-    }
-
-    return result;
-  }
-
-  // else use sequential:
-  // SEQUENTIAL
-  // Iterate through all the terms in the first polynomial 
-  for (auto p1_iter = p1.poly.begin(); p1_iter != p1.poly.end(); p1_iter++) {
-
-    // Temporary polynomial for individual sums 
-    polynomial temp;
-
-    // Iterate through all the terms in the second polynomial
-    for (auto p2_iter = p2.poly.begin(); p2_iter != p2.poly.end(); p2_iter++) {
-      temp.poly[(p1_iter -> first) + (p2_iter -> first)] = (p1_iter -> second) * (p2_iter -> second);
-    }
-
-    result = result + temp;
-  }
-
-  return result;
-
-
-
-
-
-
-/*
   // set p1 and p2 so i can copy and paste from my test functions
-  polynomial p1 = *this;
-  polynomial p2 = other;
+  polynomial p1, p2;
+  // make p1 the bigger polynomial
+  if ((*this).poly.size() > other.poly.size()) {
+    p1 = *this;
+    p2 = other;
+  } else {
+    p1 = other;
+    p2 = *this;
+  }
 
   // stop early if result = 0
   polynomial result;
@@ -544,6 +350,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
 
   int p1_size = p1.poly.size();
   int p2_size = p2.poly.size();
+  // decide whether to use parallel or sequential
   if ((p1_size >= 30 && (p1_size / p2_size >= 3)) || ((p1_size * p2_size > 1000) && ((p2_size / p1_size >= 4) || (p1_size / p2_size > 0)))) { // use parallel
     // PARALLEL (threads = 8)
     int size = 8; // using 8 threads
@@ -679,7 +486,6 @@ polynomial polynomial::operator*(const polynomial& other) const {
   }
 
   return result;
-  */
 }
 
 // Finds the modulo of a polynomial and another polynomial (polynomial % polynomial) and returns the result
