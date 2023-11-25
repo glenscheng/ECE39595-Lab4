@@ -205,6 +205,7 @@ class polynomial
     bool check_coeff(power pwr, coeff exp_c);
 
 
+    friend polynomial test_mult_p1_p2_parallel_8(polynomial p1, polynomial p2);
     friend polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2);
     friend polynomial test_mult_p1_p2_sequential(polynomial p1, polynomial p2);
     friend polynomial test_mult_p_int_parallel_4(polynomial p, const int c);
