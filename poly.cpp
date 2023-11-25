@@ -1,11 +1,12 @@
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <thread>
 #include <iostream>
+#include <algorithm>
 #include "poly.h"
 
 using std::vector;
-using std::map;
+using std::unordered_map;
 using std::thread;
 using std::ref;
 using std::cout;
@@ -16,21 +17,12 @@ polynomial::polynomial(void) {} // stay as empty map
 
 // Copy constructor 
 polynomial::polynomial(const polynomial &other) {
-  // Initialize and fill new map w/ `other` polynomial
-  map<power, coeff> new_poly(other.poly);
-
-  // Copy map to `this` polynomial
-  poly = new_poly;
+  this -> poly = other.poly;
 }
 
 // Assignment operator 
 polynomial& polynomial::operator=(const polynomial &other) {
-  // Initialize and fill new map w/ `other` polynomial
-  map<power, coeff> new_poly(other.poly);
-
-  // Copy map to `this` polynomial
-  poly = new_poly;
-
+  this -> poly = other.poly;
   return *this;
 }
 
@@ -39,14 +31,21 @@ std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {
 
   std::vector<std::pair<power, coeff>> result; // Vector containing power and coefficient pairs
 
-  // Iterate through the polynomial starting from the highest degree
-  for (auto Iter = (this -> poly).rbegin(); Iter != (this -> poly).rend(); Iter++) {
-    result.push_back(*Iter);
+  // Get the keys of the map in sorted order
+  std::vector<power> keys;
+  for(auto Iter = poly.begin(); Iter != poly.end(); Iter++) {
+    keys.push_back(Iter -> first);
+  }
+  std::sort(keys.begin(), keys.end(), std::greater<power>());
+
+  // Insert the polynomial terms in the result
+  for(auto Iter = keys.begin(); Iter != keys.end(); Iter++) {
+    result.push_back({*Iter, poly.at(*Iter)});
   }
 
   // If there are no terms in the polynomial, then add (0,0)
   if ((this -> poly).empty()) {
-    result.push_back(std::pair<power, coeff>(0, 0));
+    result.push_back({0, 0});
   }
 
   return result;
@@ -54,8 +53,17 @@ std::vector<std::pair<power, coeff>> polynomial::canonical_form() const {
 
 // Returns the degree of the polynomial
 size_t polynomial::find_degree_of() const {
+
   if (!((this -> poly).empty())) {
-    return (this -> poly).rbegin() -> first; 
+
+    // Get the keys of the map in sorted order
+    std::vector<power> keys;
+    for(auto Iter = poly.begin(); Iter != poly.end(); Iter++) {
+    keys.push_back(Iter -> first);
+    }
+    std::sort(keys.begin(), keys.end(), std::greater<power>());
+
+    return *(keys.begin()); 
   } else {
     return 0;
   }
@@ -64,9 +72,16 @@ size_t polynomial::find_degree_of() const {
 // Prints the polynomial
 void polynomial::print() const {
 
-  for (auto p = (this -> poly).rbegin(); p != (this -> poly).rend(); p++) {
-    int pow = p -> first;
-    int cof = p -> second;
+  // Get the keys of the map in sorted order
+  std::vector<power> keys;
+  for(auto Iter = poly.begin(); Iter != poly.end(); Iter++) {
+    keys.push_back(Iter -> first);
+  }
+  std::sort(keys.begin(), keys.end(), std::greater<power>());
+  
+  for (size_t p : keys) {
+    int pow = p;
+    int cof = (this -> poly).at(p);
     std::cout << "(" << cof << "x^" << pow << ") + ";  
   }
 
@@ -77,46 +92,29 @@ void polynomial::print() const {
 // Adds two polynomials (polynomial + polynomial) and returns the result
 polynomial polynomial::operator+(const polynomial& other) const {
 
-  polynomial result;
+  // Initialize the result to be the same as the current polynomial
+  polynomial result = *this;
 
-  // Initialize pointers to both of the polynomials
-  auto p = (this -> poly).rbegin();
-  auto q = other.poly.rbegin();
-  auto p_end = (this -> poly).rend();
-  auto q_end = other.poly.rend();
+  // Iterate through all the terms in the other polynomial and add up
+  // the coefficients corresponding to the terms
+  for(auto element : other.poly) {
 
-  // Iterate through both of the polynomials and add up the terms
-  while (p != p_end || q != q_end) {
-
-    // Check if reached the end of one of the polynomials
-    if (p == p_end) {
-      result.poly.insert(std::pair<power, coeff>(q -> first, q -> second));
-      q++;
-    } else if (q == q_end) {
-      result.poly.insert(std::pair<power, coeff>(p -> first, p -> second));
-      p++;
-
-      // Check if there are terms corresponding to the current degree in both of the polynomials
-    } else if ((p -> first) == (q -> first)) {
+    // Check whether the term already exists in the result. If so, then
+    // add up the coefficients. Otherwise, create a new term
+    if (result.poly.find(element.first) != result.poly.end()) {
 
       // Don't add zero terms
-      if ((p -> second) + (q -> second) != 0) {
-        result.poly.insert(std::pair<power, coeff>(p -> first, (p -> second) + (q -> second)));
+      if (result.poly.at(element.first) + element.second != 0) {
+        result.poly.at(element.first) += element.second;
+      } else {
+        result.poly.erase(element.first);
       }
-      p++;
-      q++;
-
-      // Insert the higer degree power first
-    } else if (p -> first > q -> first) {
-      result.poly.insert(std::pair<power, coeff>(p -> first, p -> second));
-      p++;
+      
     } else {
-      result.poly.insert(std::pair<power, coeff>(q -> first, q -> second));
-      q++;
+      result.poly[element.first] = element.second;
     }
 
   }
-
   return result;
 }
 
@@ -173,7 +171,7 @@ polynomial operator+(const int i, const polynomial& polynomial_object) {
 }
 
 // Functions for threading
-static void mult_p1_p2_4(map<power, coeff> this_vals, map<power, coeff> other_vals, polynomial &temp) {
+/*static void mult_p1_p2_4(map<power, coeff> this_vals, map<power, coeff> other_vals, polynomial &temp) {
   // Iterate through all the terms in the first polynomial 
   auto this_end = this_vals.rend();
   auto other_end = other_vals.rend();
@@ -199,14 +197,14 @@ static void mult_p_int_4(map<power, coeff> this_vals, const int i, polynomial &t
     t.insert_poly((*this_iter).first, (*this_iter).second * i);
     temp = temp + t;
   }
-}
+}*/
 
 // Multiplies a polynomial and a number (polynomial * int) and returns the result
 polynomial polynomial::operator*(const int i) const {
   
   polynomial result;
 
-  if ((*this).poly.empty() == true) {
+  if ((this -> poly).empty() == true) {
     return result;
   }
 
@@ -239,8 +237,92 @@ polynomial operator*(const int i, const polynomial& polynomial_object) {
   return result;
 }
 
+// Free function that multiplies two polynomials in a sequential fashion
+void SequentialMultiply(const polynomial& p1, const polynomial& p2, polynomial& res) {
+	
+  polynomial result;
+
+	// Iterate through all the terms in the first polynomial 
+	for (auto iter = p1.poly.begin(); iter != p1.poly.end(); iter++) {
+
+		// Temporary polynomial for individual sums 
+		polynomial temp;
+
+		// Iterate through all the terms in the second polynomial
+		for (auto other_iter = p2.poly.begin(); other_iter != p2.poly.end(); other_iter++) {
+			temp.poly[(iter -> first) + (other_iter -> first)] = (iter -> second) * (other_iter -> second);
+		}
+
+		result = result + temp;
+	}
+
+	res = result;
+
+}
+
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
 polynomial polynomial::operator*(const polynomial& other) const {
+
+  polynomial result;                                    // Resulting polynomial after performing the multiplication operation
+  std::vector<polynomial> threads_results(num_threads); // Vector containing the results from each thread
+  std::vector<polynomial> threads_p1(num_threads);      // Vector containing the first polynomials in the multiplication of each thread
+  std::vector<polynomial> threads_p2(num_threads);      // Vector containing the second polynomials in the multiplication of each thread
+  std::vector<thread> threads;                          // Threads to perform sequential multiplication
+  auto largest_poly_begin = (this -> poly).begin();     // Polynomial with the most number of terms
+  auto largest_poly_end = (this -> poly).end();         // Polynomial with the most number of terms  
+
+
+  // Find the polynomial with the largest terms
+  int p1_size = (this -> poly).size(); // Number of terms in polynomial 1
+  int p2_size = other.poly.size();     // Number of terms in polynomial 2
+  if (p1_size >= p2_size) {
+    largest_poly_begin = (this -> poly).begin();
+    largest_poly_end = (this -> poly).end();
+    for(int i = 0; i < num_threads; i++) {
+      threads_p2[i] = other;
+    }
+  } else {
+    largest_poly_begin = other.poly.begin();
+    largest_poly_end = other.poly.end();
+    for(int i = 0; i < num_threads; i++) {
+      threads_p2[i] = *this;
+    }
+  }
+
+  // Divide the polynomial with the largest number of terms into 4 threads
+  int thread_no = 0;
+  while (largest_poly_begin != largest_poly_end) {
+
+    // Insert a term into the current polynomial
+    std::vector<std::pair<power, coeff>> p = {{largest_poly_begin -> first, largest_poly_begin -> second}};
+    threads_p1[thread_no] = threads_p1[thread_no] + polynomial(p.begin(), p.end());
+    largest_poly_begin++;
+    thread_no++;
+    if (thread_no >= num_threads) {
+      thread_no = 0;
+    }
+  }
+
+  // Perform sequential multiplication in 4 threads
+  for (int i = 0; i < num_threads; i++) {
+    threads.push_back(thread(SequentialMultiply, threads_p1[i], threads_p2[i], std::ref(threads_results[i])));
+  }
+
+  // Wait for the 4 threads to finish
+  for (int i = 0; i < num_threads; i++) {
+    threads[i].join();
+  }
+
+  // Add up the results from each thread
+  for (int i = 0; i < num_threads; i++) {
+    result = result + threads_results[i];
+  }
+
+  return result;
+}
+
+// Multiplies two polynomials (polynomial * polynomial) and returns the result
+/*polynomial polynomial::operator*(const polynomial& other) const {
   polynomial p1 = *this;
   polynomial p2 = other;
 
@@ -258,7 +340,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
     vector<polynomial> temps(size, result); // initialize temps vector to all 0 polynomials
 
     // create vectors for powers and coeffs for `other`
-    map<power, coeff> other_vals;
+    unordered_map<power, coeff> other_vals;
     for (auto p : p2.poly) {
       other_vals.insert({p.first, p.second});
     }
@@ -342,7 +424,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
   }
 
   return result;
-}
+}*/
 
 // Finds the modulo of a polynomial and another polynomial (polynomial % polynomial) and returns the result
 polynomial polynomial::operator%(const polynomial& other) const {
@@ -350,16 +432,25 @@ polynomial polynomial::operator%(const polynomial& other) const {
   // Create a copy of the current polynomial
   polynomial result = *this;
   polynomial divisor = other;
+  size_t divisor_degree = divisor.find_degree_of();
 
   // Do the long division
-  while (other.find_degree_of() <= result.find_degree_of()) {
+  while (divisor_degree <= result.find_degree_of()) {
+
+    // Find the degree of the current polynomial
     int result_degree = result.find_degree_of();
-    int divisor_degree = divisor.find_degree_of();
+
+    // Get the mutliplication constant and degree
     int multiplication_constant = result.poly[result_degree] / divisor.poly[divisor_degree];
     int multiplication_power = result_degree - divisor_degree;
+
+    // Construct the polynomial to multiply the divisior by
     std::vector<std::pair<power, coeff>> multiplication_polynomial_terms = {{multiplication_power, multiplication_constant}};
     polynomial multiplication_polynomial = polynomial(multiplication_polynomial_terms.begin(), multiplication_polynomial_terms.end());
+
+    // Multiply the polynomial by the divisor and subtract from the result
     result = result + (-1 * (other * multiplication_polynomial));
+
   }
 
   return result;
@@ -389,7 +480,7 @@ bool polynomial::check_coeff(power pwr, coeff exp_c) {
   return true;
 }
 
-// Test function for parallel polynomial * polynomial
+/*// Test function for parallel polynomial * polynomial
 polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2) {
   int p1_size = p1.poly.size();
   int p2_size = p2.poly.size();
@@ -620,4 +711,4 @@ polynomial test_mult_p_int_sequential(polynomial p, const int c) {
   }
 
   return result;
-}
+}*/

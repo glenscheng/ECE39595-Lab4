@@ -4,17 +4,18 @@
 #include <vector>
 #include <utility>
 #include <cstddef>
-#include <map>
+#include <unordered_map>
 #include <iostream>
 
 using power = size_t;
 using coeff = int;
-using std::map;
+using std::unordered_map;
 
 class polynomial
 {
   private:
-    map<power, coeff> poly;
+    unordered_map<power, coeff> poly;
+    int num_threads = 4;
 
   public:
     /**
@@ -49,7 +50,7 @@ class polynomial
      * @return
      *  The map
      */
-    map<power, coeff> get_poly() const { return poly; }
+    unordered_map<power, coeff> get_poly() const { return poly; }
 
     /**
      * @brief Clear map
@@ -208,6 +209,8 @@ class polynomial
     friend polynomial test_mult_p1_p2_sequential(polynomial p1, polynomial p2);
     friend polynomial test_mult_p_int_parallel_4(polynomial p, const int c);
     friend polynomial test_mult_p_int_sequential(polynomial p, const int c);
+
+    friend void SequentialMultiply(const polynomial& p1, const polynomial& p2, polynomial& res);
 };
 
 // Construct a new polynomial object from an iterator to pairs of <power,coeff>
