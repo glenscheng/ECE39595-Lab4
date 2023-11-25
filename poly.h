@@ -5,6 +5,7 @@
 #include <utility>
 #include <cstddef>
 #include <map>
+#include <iostream>
 
 using power = size_t;
 using coeff = int;
@@ -25,15 +26,14 @@ class polynomial
     /**
      * @brief Construct a new polynomial object from an iterator to pairs of <power,coeff>
      *
-     * @tparam Iter
+     * @param Iter
      *  An iterator that points to a std::pair<power, coeff>
      * @param begin
      *  The start of the container to copy elements from
      * @param end
      *  The end of the container to copy elements from
      */
-    template <typename Iter>
-    polynomial(Iter begin, Iter end);
+    template <typename Iter> polynomial(Iter begin, Iter end);
 
     /**
      * @brief Construct a new polynomial object from an existing polynomial object
@@ -42,6 +42,31 @@ class polynomial
      *  The polynomial to copy
      */
     polynomial(const polynomial &other);
+
+    /**
+     * @brief Return map
+     *
+     * @return
+     *  The map
+     */
+    map<power, coeff> get_poly() const { return poly; }
+
+    /**
+     * @brief Clear map
+     *
+     */
+    void clear_poly() { poly.clear(); }
+
+
+    /**
+     * @brief Insert key value pair into map
+     *
+     * @param p
+     *  Key of insertion
+     * @param c
+     *  Value of insertion
+     */
+    void insert_poly(power p, coeff c) { poly.insert({p,c}); }
 
     /**
      * @brief Prints the polynomial.
@@ -105,12 +130,44 @@ class polynomial
     friend polynomial operator+(const int i, const polynomial& polynomial_object);
 
     /**
+     * @brief Multiplies two polynomials (polynomial * polynomial) and returns the result
+     *i
+     * @return polynomial
+     *  The result of the addition
+     */
+    polynomial operator*(const polynomial& other) const;  
+
+    /**
+     * @brief Multiplies a polynomial and a number (polynomial * int) and returns the result
+     *
+     * @return polynomial
+     *  The result of the addition
+     */
+    polynomial operator*(const int c) const; 
+
+    /**
+     * @brief Multiplies a number and a polynomial (int * polynomial) and returns the result
+     *
+     * @return polynomial
+     *  The result of the addition
+     */
+    friend polynomial operator*(const int i, const polynomial& polynomial_object);
+    
+    /**
+     * @brief Finds the modulo of a polynomial and another polynomial (polynomial * int) and returns the result
+     *
+     * @return polynomial
+     *  The result of the addition
+     */
+    polynomial operator%(const polynomial& other) const; 
+
+    /**
      * @brief Returns the degree of the polynomial
      *
      * @return size_t
      *  The degree of the polynomial
      */
-    size_t find_degree_of();
+    size_t find_degree_of() const;
 
     /**
      * @brief Returns a vector that contains the polynomial is canonical form. This
@@ -133,6 +190,39 @@ class polynomial
      *  A vector of pairs representing the canonical form of the polynomial
      */
     std::vector<std::pair<power, coeff>> canonical_form() const;
+
+    /**
+     * @brief Returns whether the polynomial contains a coeff at a specific power
+     *
+     * @param pwr
+     *  The specific power
+     * @param exp_c
+     *  The expected coeff
+     * @return bool
+     *  Whether the coeffs match
+     */
+    bool check_coeff(power pwr, coeff exp_c);
+
+
+    friend polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2);
+    friend polynomial test_mult_p1_p2_sequential(polynomial p1, polynomial p2);
+    friend polynomial test_mult_p_int_parallel_4(polynomial p, const int c);
+    friend polynomial test_mult_p_int_sequential(polynomial p, const int c);
 };
+
+// Construct a new polynomial object from an iterator to pairs of <power,coeff>
+template <typename Iter> polynomial::polynomial(Iter begin, Iter end) {
+  while (begin != end) {
+    // Ignore 0 coefficients
+    if ((*begin).second == 0) {
+      begin++;
+      continue;
+    }
+    // Insert the current power and coefficient pair
+    poly.insert(*begin);
+    
+    begin++;
+  }
+}
 
 #endif

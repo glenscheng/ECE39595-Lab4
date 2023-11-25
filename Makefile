@@ -5,7 +5,8 @@ SRC_FILES=$(filter-out $(wildcard main.cpp),$(wildcard *.cpp))
 APP=poly
 
 custom_tests:
-	$(CC) $(C_FLAGS) $(SRC_FILES) -o $(APP)
+	$(CC) $(C_FLAGS) $(SRC_FILES) main.cpp -o $(APP)
+	./$(APP)
 
 valgrind:
 	valgrind --leak-check=full ./$(APP) $(TEST)
