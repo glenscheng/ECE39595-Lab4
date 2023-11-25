@@ -171,14 +171,14 @@ polynomial operator+(const int i, const polynomial& polynomial_object) {
 }
 
 // Functions for threading
-/*static void mult_p1_p2_4(map<power, coeff> this_vals, map<power, coeff> other_vals, polynomial &temp) {
+static void mult_p1_p2_4(unordered_map<power, coeff> this_vals, unordered_map<power, coeff> other_vals, polynomial &temp) {
   // Iterate through all the terms in the first polynomial 
-  auto this_end = this_vals.rend();
-  auto other_end = other_vals.rend();
-  for (auto this_iter = this_vals.rbegin(); this_iter != this_end; this_iter++) {
+  auto this_end = this_vals.end();
+  auto other_end = other_vals.end();
+  for (auto this_iter = this_vals.begin(); this_iter != this_end; this_iter++) {
     polynomial t;
     // Iterate through all the terms in the second polynomial
-    for (auto other_iter = other_vals.rbegin(); other_iter != other_end; other_iter++) {
+    for (auto other_iter = other_vals.begin(); other_iter != other_end; other_iter++) {
       power new_power = (*this_iter).first + (*other_iter).first;
       coeff new_coeff = (*this_iter).second * (*other_iter).second;
       if (new_coeff == 0) {
@@ -189,15 +189,15 @@ polynomial operator+(const int i, const polynomial& polynomial_object) {
     temp = temp + t;
   }
 }
-static void mult_p_int_4(map<power, coeff> this_vals, const int i, polynomial &temp) {
+static void mult_p_int_4(unordered_map<power, coeff> this_vals, const int i, polynomial &temp) {
   // Iterate through all the terms in the polynomial 
-  auto this_end = this_vals.rend();
-  for (auto this_iter = this_vals.rbegin(); this_iter != this_end; this_iter++) {
+  auto this_end = this_vals.end();
+  for (auto this_iter = this_vals.begin(); this_iter != this_end; this_iter++) {
     polynomial t;
     t.insert_poly((*this_iter).first, (*this_iter).second * i);
     temp = temp + t;
   }
-}*/
+}
 
 // Multiplies a polynomial and a number (polynomial * int) and returns the result
 polynomial polynomial::operator*(const int i) const {
@@ -237,6 +237,7 @@ polynomial operator*(const int i, const polynomial& polynomial_object) {
   return result;
 }
 
+/* rajit's threads helper function
 // Free function that multiplies two polynomials in a sequential fashion
 void SequentialMultiply(const polynomial& p1, const polynomial& p2, polynomial& res) {
 	
@@ -259,7 +260,9 @@ void SequentialMultiply(const polynomial& p1, const polynomial& p2, polynomial& 
 	res = result;
 
 }
+*/
 
+/* rajit's threads implementation
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
 polynomial polynomial::operator*(const polynomial& other) const {
 
@@ -320,9 +323,10 @@ polynomial polynomial::operator*(const polynomial& other) const {
 
   return result;
 }
+*/
 
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
-/*polynomial polynomial::operator*(const polynomial& other) const {
+  polynomial polynomial::operator*(const polynomial& other) const {
   polynomial p1 = *this;
   polynomial p2 = other;
 
@@ -346,10 +350,10 @@ polynomial polynomial::operator*(const polynomial& other) const {
     }
 
     // create vectors for powers and coeffs for `this` / 4
-    auto this_iter = p1.poly.rbegin();
-    auto this_end = p1.poly.rend();
+    auto this_iter = p1.poly.begin();
+    auto this_end = p1.poly.end();
     // for 1st thread:
-    map<power, coeff> this_vals1;
+    unordered_map<power, coeff> this_vals1;
     int i = 0;
     while (i < this_terms_per_thread) {
       this_vals1.insert({(*this_iter).first, (*this_iter).second});
@@ -357,7 +361,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
       this_iter++;
     }
     // for 2nd thread:
-    map<power, coeff> this_vals2;
+    unordered_map<power, coeff> this_vals2;
     i = 0;
     while (i < this_terms_per_thread) {
       this_vals2.insert({(*this_iter).first, (*this_iter).second});
@@ -365,7 +369,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
       this_iter++;
     }
     // for 3rd thread:
-    map<power, coeff> this_vals3;
+    unordered_map<power, coeff> this_vals3;
     i = 0;
     while (i < this_terms_per_thread) {
       this_vals3.insert({(*this_iter).first, (*this_iter).second});
@@ -373,7 +377,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
       this_iter++;
     }
     // for 4th thread:
-    map<power, coeff> this_vals4;
+    unordered_map<power, coeff> this_vals4;
     while (this_iter != this_end) {
       this_vals4.insert({(*this_iter).first, (*this_iter).second});
       this_iter++;
@@ -424,7 +428,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
   }
 
   return result;
-}*/
+}
 
 // Finds the modulo of a polynomial and another polynomial (polynomial % polynomial) and returns the result
 polynomial polynomial::operator%(const polynomial& other) const {
@@ -480,7 +484,7 @@ bool polynomial::check_coeff(power pwr, coeff exp_c) {
   return true;
 }
 
-/*// Test function for parallel polynomial * polynomial
+// Test function for parallel polynomial * polynomial
 polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2) {
   int p1_size = p1.poly.size();
   int p2_size = p2.poly.size();
@@ -497,16 +501,16 @@ polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2) {
     vector<polynomial> temps(size, zero); // initialize temps vector to all 0 polynomials
 
     // create vectors for powers and coeffs for `other`
-    map<power, coeff> other_vals;
+    unordered_map<power, coeff> other_vals;
     for (auto p : p2.poly) {
       other_vals.insert({p.first, p.second});
     }
 
     // create vectors for powers and coeffs for `this` / 4
-    auto this_iter = p1.poly.rbegin();
-    auto this_end = p1.poly.rend();
+    auto this_iter = p1.poly.begin();
+    auto this_end = p1.poly.end();
     // for 1st thread:
-    map<power, coeff> this_vals1;
+    unordered_map<power, coeff> this_vals1;
     int i = 0;
     while (i < this_terms_per_thread) {
       this_vals1.insert({(*this_iter).first, (*this_iter).second});
@@ -514,7 +518,7 @@ polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2) {
       this_iter++;
     }
     // for 2nd thread:
-    map<power, coeff> this_vals2;
+    unordered_map<power, coeff> this_vals2;
     i = 0;
     while (i < this_terms_per_thread) {
       this_vals2.insert({(*this_iter).first, (*this_iter).second});
@@ -522,7 +526,7 @@ polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2) {
       this_iter++;
     }
     // for 3rd thread:
-    map<power, coeff> this_vals3;
+    unordered_map<power, coeff> this_vals3;
     i = 0;
     while (i < this_terms_per_thread) {
       this_vals3.insert({(*this_iter).first, (*this_iter).second});
@@ -530,7 +534,7 @@ polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2) {
       this_iter++;
     }
     // for 4th thread:
-    map<power, coeff> this_vals4;
+    unordered_map<power, coeff> this_vals4;
     while (this_iter != this_end) {
       this_vals4.insert({(*this_iter).first, (*this_iter).second});
       this_iter++;
@@ -632,10 +636,10 @@ polynomial test_mult_p_int_parallel_4(polynomial p, const int c) {
   vector<polynomial> temps(size, zero); // initialize temps vector to all 0 polynomials
 
   // create vectors for powers and coeffs for `this` / 4
-  auto this_iter = p.poly.rbegin();
-  auto this_end = p.poly.rend();
+  auto this_iter = p.poly.begin();
+  auto this_end = p.poly.end();
   // for 1st thread:
-  map<power, coeff> this_vals1;
+  unordered_map<power, coeff> this_vals1;
   int i = 0;
   while (i < this_terms_per_thread) {
     this_vals1.insert({(*this_iter).first, (*this_iter).second});
@@ -643,7 +647,7 @@ polynomial test_mult_p_int_parallel_4(polynomial p, const int c) {
     this_iter++;
   }
   // for 2nd thread:
-  map<power, coeff> this_vals2;
+  unordered_map<power, coeff> this_vals2;
   i = 0;
   while (i < this_terms_per_thread) {
     this_vals2.insert({(*this_iter).first, (*this_iter).second});
@@ -651,7 +655,7 @@ polynomial test_mult_p_int_parallel_4(polynomial p, const int c) {
     this_iter++;
   }
   // for 3rd thread:
-  map<power, coeff> this_vals3;
+  unordered_map<power, coeff> this_vals3;
   i = 0;
   while (i < this_terms_per_thread) {
     this_vals3.insert({(*this_iter).first, (*this_iter).second});
@@ -659,7 +663,7 @@ polynomial test_mult_p_int_parallel_4(polynomial p, const int c) {
     this_iter++;
   }
   // for 4th thread:
-  map<power, coeff> this_vals4;
+  unordered_map<power, coeff> this_vals4;
   while (this_iter != this_end) {
     this_vals4.insert({(*this_iter).first, (*this_iter).second});
     this_iter++;
@@ -711,4 +715,4 @@ polynomial test_mult_p_int_sequential(polynomial p, const int c) {
   }
 
   return result;
-}*/
+}

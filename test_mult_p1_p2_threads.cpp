@@ -749,7 +749,7 @@ void test_mult_p1_p2_threads_main() {
   two_sixty();
   fifteen_sixty();
   sixties();
-  //fivethousands();
-  //twentyfivethousands();
+  fivethousands();
+  twentyfivethousands();
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
