@@ -263,13 +263,14 @@ void SequentialMultiply(const polynomial& p1, const polynomial& p2, polynomial& 
 // Multiplies two polynomials (polynomial * polynomial) and returns the result
 polynomial polynomial::operator*(const polynomial& other) const {
 
-  polynomial result;                                    // Resulting polynomial after performing the multiplication operation
-  std::vector<polynomial> threads_results(num_threads); // Vector containing the results from each thread
-  std::vector<polynomial> threads_p1(num_threads);      // Vector containing the first polynomials in the multiplication of each thread
-  std::vector<polynomial> threads_p2(num_threads);      // Vector containing the second polynomials in the multiplication of each thread
-  std::vector<thread> threads;                          // Threads to perform sequential multiplication
-  auto largest_poly_begin = (this -> poly).begin();     // Polynomial with the most number of terms
-  auto largest_poly_end = (this -> poly).end();         // Polynomial with the most number of terms  
+  polynomial result;                                                               // Resulting polynomial after performing the multiplication operation
+  std::vector<polynomial> threads_results(num_threads);                            // Vector containing the results from each thread
+  std::vector<std::vector<std::pair<power, coeff>>> threads_p1_terms(num_threads); // Vector containing the first polynomials in the multiplication of each thread
+  std::vector<polynomial> threads_p1(num_threads);                                 // Vector containing the first polynomials in the multiplication of each thread
+  std::vector<polynomial> threads_p2(num_threads);                                 // Vector containing the second polynomials in the multiplication of each thread
+  std::vector<thread> threads;                                                     // Threads to perform sequential multiplication
+  auto largest_poly_begin = (this -> poly).begin();                                // Polynomial with the most number of terms
+  auto largest_poly_end = (this -> poly).end();                                    // Polynomial with the most number of terms  
 
 
   // Find the polynomial with the largest terms
@@ -294,13 +295,17 @@ polynomial polynomial::operator*(const polynomial& other) const {
   while (largest_poly_begin != largest_poly_end) {
 
     // Insert a term into the current polynomial
-    std::vector<std::pair<power, coeff>> p = {{largest_poly_begin -> first, largest_poly_begin -> second}};
-    threads_p1[thread_no] = threads_p1[thread_no] + polynomial(p.begin(), p.end());
+    threads_p1_terms[thread_no].push_back({largest_poly_begin -> first, largest_poly_begin -> second});
     largest_poly_begin++;
     thread_no++;
     if (thread_no >= num_threads) {
       thread_no = 0;
     }
+  }
+
+  // Create polynomial 1 for all threads
+  for (int i = 0; i < num_threads; i++) {
+    threads_p1[i] = polynomial(threads_p1_terms[i].begin(), threads_p1_terms[i].end());
   }
 
   // Perform sequential multiplication in 4 threads
