@@ -273,8 +273,7 @@ polynomial polynomial::operator*(const polynomial& other) const {
   std::vector<polynomial> threads_p2(num_threads);                                 // Vector containing the second polynomials in the multiplication of each thread
   std::vector<thread> threads;                                                     // Threads to perform sequential multiplication
   auto largest_poly_begin = (this -> poly).begin();                                // Polynomial with the most number of terms
-  auto largest_poly_end = (this -> poly).end();                                    // Polynomial with the most number of terms
-
+  auto largest_poly_end = (this -> poly).end();                                    // Polynomial with the most number of terms  
 
   // Find the polynomial with the largest terms
   int p1_size = (this -> poly).size(); // Number of terms in polynomial 1
