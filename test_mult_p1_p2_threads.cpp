@@ -14,7 +14,7 @@ static void CompareSequentialVsParallel(polynomial p1, polynomial p2){
   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
   test_mult_p1_p2_sequential(p1, p2);
   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-  test_mult_p1_p2_parallel_4(p1, p2);
+  test_mult_p1_p2_parallel_8(p1, p2);
   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
   double duration1 = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
@@ -697,8 +697,8 @@ static void fivethousands() {
   cout << "Total terms:" << p.get_poly().size() * p.get_poly().size() << endl << endl;
   
   // act
-  cout << "4 THREADS:" << endl;
-  Parallel4(p, p);
+  //cout << "4 THREADS:" << endl;
+  //Parallel4(p, p);
   cout << "8 THREADS:" << endl;
   Parallel8(p, p);
 }
@@ -724,8 +724,8 @@ static void twentyfivethousands() {
   cout << "Total terms:" << p.get_poly().size() * p.get_poly().size() << endl << endl;
   
   // act
-  cout << "4 THREADS:" << endl;
-  Parallel4(p, p);
+  //cout << "4 THREADS:" << endl;
+  //Parallel4(p, p);
   cout << "8 THREADS:" << endl;
   Parallel8(p, p);
 }

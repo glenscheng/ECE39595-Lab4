@@ -71,5 +71,5 @@ int main()
   test_multiplication();
   test_modulo_main();
   test_mult_p1_p2_threads_main();
-  test_mult_p_int_threads();
+  //test_mult_p_int_threads();
 }
