@@ -175,7 +175,7 @@ static void mult_p1_p2_iterators(unordered_map<power, coeff>::iterator this_val_
   // Iterate through all the terms in the first polynomial 
   auto other_end = other_vals.end();
   for (auto this_iter = this_val_begin; this_iter != this_val_end; this_iter++) {
-    polynomial t;
+    //polynomial t;
     // Iterate through all the terms in the second polynomial
     for (auto other_iter = other_vals.begin(); other_iter != other_end; other_iter++) {
       power new_power = (*this_iter).first + (*other_iter).first;
@@ -183,9 +183,10 @@ static void mult_p1_p2_iterators(unordered_map<power, coeff>::iterator this_val_
       if (new_coeff == 0) {
         continue;
       }
-      t.insert_poly(new_power, new_coeff);
+      //t.insert_poly(new_power, new_coeff);
+      temp.insert_add_poly(new_power, new_coeff);
     }
-    temp = temp + t;
+    //temp = temp + t;
   }
 }
 static void mult_p1_p2(unordered_map<power, coeff> this_vals, unordered_map<power, coeff> other_vals, polynomial &temp) {
@@ -193,7 +194,7 @@ static void mult_p1_p2(unordered_map<power, coeff> this_vals, unordered_map<powe
   auto this_end = this_vals.end();
   auto other_end = other_vals.end();
   for (auto this_iter = this_vals.begin(); this_iter != this_end; this_iter++) {
-    polynomial t;
+    //polynomial t;
     // Iterate through all the terms in the second polynomial
     for (auto other_iter = other_vals.begin(); other_iter != other_end; other_iter++) {
       power new_power = (*this_iter).first + (*other_iter).first;
@@ -201,9 +202,10 @@ static void mult_p1_p2(unordered_map<power, coeff> this_vals, unordered_map<powe
       if (new_coeff == 0) {
         continue;
       }
-      t.insert_poly(new_power, new_coeff);
+      //t.insert_poly(new_power, new_coeff);
+      temp.insert_add_poly(new_power, new_coeff);
     }
-    temp = temp + t;
+    //temp = temp + t;
   }
 }
 static void mult_p_int_4(unordered_map<power, coeff> this_vals, const int i, polynomial &temp) {
@@ -444,30 +446,38 @@ polynomial polynomial::operator*(const polynomial& other) const {
     }
 
     // initialize threads vector AND call threads
-    vector<thread> threads;
+    vector<thread> threads(size);
     i = 0;
-    threads.push_back(thread(mult_p1_p2, this_vals1, other_vals, ref(temps.at(i))));
+    threads.at(i) = thread(mult_p1_p2, this_vals1, other_vals, ref(temps.at(i)));
+    //threads.push_back(thread(mult_p1_p2, this_vals1, other_vals, ref(temps.at(i))));
     threads.at(i);
     i++;
-    threads.push_back(thread(mult_p1_p2, this_vals2, other_vals, ref(temps.at(i))));
+    threads.at(i) = thread(mult_p1_p2, this_vals2, other_vals, ref(temps.at(i)));
+    //threads.push_back(thread(mult_p1_p2, this_vals2, other_vals, ref(temps.at(i))));
     threads.at(i);
     i++;
-    threads.push_back(thread(mult_p1_p2, this_vals3, other_vals, ref(temps.at(i))));
+    threads.at(i) = thread(mult_p1_p2, this_vals3, other_vals, ref(temps.at(i)));
+    //threads.push_back(thread(mult_p1_p2, this_vals3, other_vals, ref(temps.at(i))));
     threads.at(i);
     i++;
-    threads.push_back(thread(mult_p1_p2, this_vals4, other_vals, ref(temps.at(i))));
+    threads.at(i) = thread(mult_p1_p2, this_vals4, other_vals, ref(temps.at(i)));
+    //threads.push_back(thread(mult_p1_p2, this_vals4, other_vals, ref(temps.at(i))));
     threads.at(i);
     i++;
-    threads.push_back(thread(mult_p1_p2, this_vals5, other_vals, ref(temps.at(i))));
+    threads.at(i) = thread(mult_p1_p2, this_vals5, other_vals, ref(temps.at(i)));
+    //threads.push_back(thread(mult_p1_p2, this_vals5, other_vals, ref(temps.at(i))));
     threads.at(i);
     i++;
-    threads.push_back(thread(mult_p1_p2, this_vals6, other_vals, ref(temps.at(i))));
+    threads.at(i) = thread(mult_p1_p2, this_vals6, other_vals, ref(temps.at(i)));
+    //threads.push_back(thread(mult_p1_p2, this_vals6, other_vals, ref(temps.at(i))));
     threads.at(i);
     i++;
-    threads.push_back(thread(mult_p1_p2, this_vals7, other_vals, ref(temps.at(i))));
+    threads.at(i) = thread(mult_p1_p2, this_vals7, other_vals, ref(temps.at(i)));
+    //threads.push_back(thread(mult_p1_p2, this_vals7, other_vals, ref(temps.at(i))));
     threads.at(i);
     i++;
-    threads.push_back(thread(mult_p1_p2, this_vals8, other_vals, ref(temps.at(i))));
+    threads.at(i) = thread(mult_p1_p2, this_vals8, other_vals, ref(temps.at(i)));
+    //threads.push_back(thread(mult_p1_p2, this_vals8, other_vals, ref(temps.at(i))));
     threads.at(i);
 
     // wait for threads to finish

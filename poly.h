@@ -70,6 +70,23 @@ class polynomial
     void insert_poly(power p, coeff c) { poly.insert({p,c}); }
 
     /**
+     * @brief Insert key value pair into map, add to the value at that key
+     *
+     * @param p
+     *  Key of insertion
+     * @param c
+     *  Value of insertion
+     */
+    void insert_add_poly(power p, coeff c) { 
+      if (poly.count(p) == 0) { // key not in map
+        poly.insert({p,c});
+        return;
+      }
+      // add value at key
+      poly[p] += c;
+    }
+
+    /**
      * @brief Prints the polynomial.
      *
      * Only used for debugging, isn't graded.
