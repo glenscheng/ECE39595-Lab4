@@ -15,7 +15,7 @@ class polynomial
 {
   private:
     unordered_map<power, coeff> poly;
-    int num_threads = 4;
+    int num_threads = 40;
 
   public:
     /**
