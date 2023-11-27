@@ -70,6 +70,23 @@ class polynomial
     void insert_poly(power p, coeff c) { poly.insert({p,c}); }
 
     /**
+     * @brief Insert key value pair into map, add to the value at that key
+     *
+     * @param p
+     *  Key of insertion
+     * @param c
+     *  Value of insertion
+     */
+    void insert_add_poly(power p, coeff c) { 
+      if (poly.count(p) == 0) { // key not in map
+        poly.insert({p,c});
+        return;
+      }
+      // add value at key
+      poly[p] += c;
+    }
+
+    /**
      * @brief Prints the polynomial.
      *
      * Only used for debugging, isn't graded.
@@ -205,6 +222,7 @@ class polynomial
     bool check_coeff(power pwr, coeff exp_c);
 
 
+    friend polynomial test_mult_p1_p2_parallel_8(polynomial p1, polynomial p2);
     friend polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2);
     friend polynomial test_mult_p1_p2_sequential(polynomial p1, polynomial p2);
     friend polynomial test_mult_p_int_parallel_4(polynomial p, const int c);
