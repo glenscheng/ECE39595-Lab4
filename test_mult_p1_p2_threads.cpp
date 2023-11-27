@@ -14,7 +14,7 @@ static void CompareSequentialVsParallel(polynomial p1, polynomial p2){
   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
   test_mult_p1_p2_sequential(p1, p2);
   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-  test_mult_p1_p2_parallel_4(p1, p2);
+  test_mult_p1_p2_parallel_8(p1, p2);
   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
   double duration1 = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
@@ -23,9 +23,18 @@ static void CompareSequentialVsParallel(polynomial p1, polynomial p2){
   cout << "Speedup: " << duration1 / duration2 << endl;
 }
 
-static void Parallel(polynomial p1, polynomial p2){
+static void Parallel4(polynomial p1, polynomial p2){
   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
   test_mult_p1_p2_parallel_4(p1, p2);
+  std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
+
+  double duration2 = std::chrono::duration_cast<std::chrono::seconds>( t3 - t2 ).count();
+  cout << "Execution time: Threads: " << duration2 << " s" << std::endl;
+}
+
+static void Parallel8(polynomial p1, polynomial p2){
+  std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
+  test_mult_p1_p2_parallel_8(p1, p2);
   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
   double duration2 = std::chrono::duration_cast<std::chrono::seconds>( t3 - t2 ).count();
@@ -688,7 +697,10 @@ static void fivethousands() {
   cout << "Total terms:" << p.get_poly().size() * p.get_poly().size() << endl << endl;
   
   // act
-  Parallel(p, p);
+  //cout << "4 THREADS:" << endl;
+  //Parallel4(p, p);
+  cout << "8 THREADS:" << endl;
+  Parallel8(p, p);
 }
 
 // 25,000x25,000
@@ -712,7 +724,10 @@ static void twentyfivethousands() {
   cout << "Total terms:" << p.get_poly().size() * p.get_poly().size() << endl << endl;
   
   // act
-  Parallel(p, p);
+  //cout << "4 THREADS:" << endl;
+  //Parallel4(p, p);
+  cout << "8 THREADS:" << endl;
+  Parallel8(p, p);
 }
 
 
@@ -749,7 +764,7 @@ void test_mult_p1_p2_threads_main() {
   two_sixty();
   fifteen_sixty();
   sixties();
-  //fivethousands();
-  //twentyfivethousands();
+  fivethousands();
+  twentyfivethousands();
   cout << "++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
