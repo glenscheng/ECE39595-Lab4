@@ -14,8 +14,9 @@ using std::unordered_map;
 class polynomial
 {
   private:
-    unordered_map<power, coeff> poly;
-    int num_threads = 4;
+
+    unordered_map<power, coeff> poly; // Stores the degree coefficient pairs
+    int num_threads = 8;              // Number of threads to use in multithreaded multiplication
 
   public:
     /**
@@ -105,24 +106,6 @@ class polynomial
      */
     polynomial &operator=(const polynomial &other);
 
-
-    /**
-     * Overload the +, * and % operators. The function prototypes are not
-     * provided.
-     * 
-     * Addition (+) should support
-     * 1. polynomial + polynomial
-     * 2. polynomial + int
-     * 3. int + polynomial
-     * 
-     * Multiplication (*) should support
-     * 1. polynomial * polynomial
-     * 2. polynomial * int
-     * 3. int * polynomial
-     * 
-     * Modulo (%) should support
-     * 1. polynomial % polynomial
-     */
     /**
      * @brief Adds two polynomials (polynomial + polynomial) and returns the result
      *
@@ -130,6 +113,14 @@ class polynomial
      *  The result of the addition
      */
     polynomial operator+(const polynomial& other) const;  
+
+    /**
+     * @brief Subtracts two polynomials (polynomial - polynomial) and returns the result
+     *
+     * @return polynomial
+     *  The result of the addition
+     */
+    polynomial operator-(const polynomial& other) const;
 
     /**
      * @brief Adds a polynomial and a number (polynomial + int) and returns the result
@@ -221,14 +212,21 @@ class polynomial
      */
     bool check_coeff(power pwr, coeff exp_c);
 
+    /**
+     * @brief Multiplies two polynomials (polynomial * polynomial) and returns the result
+     *i
+     * @return polynomial
+     *  The result of the addition
+     */
+    friend polynomial SequentialMultiplySingleTerm(const std::pair<power, coeff>& poly_term, const polynomial& poly2);
 
-    friend polynomial test_mult_p1_p2_parallel_8(polynomial p1, polynomial p2);
-    friend polynomial test_mult_p1_p2_parallel_4(polynomial p1, polynomial p2);
-    friend polynomial test_mult_p1_p2_sequential(polynomial p1, polynomial p2);
-    friend polynomial test_mult_p_int_parallel_4(polynomial p, const int c);
-    friend polynomial test_mult_p_int_sequential(polynomial p, const int c);
-
-    friend void SequentialMultiply(const polynomial& p1, const polynomial& p2, polynomial& res);
+    /**
+     * @brief Multiplies two polynomials (polynomial * polynomial) and returns the result
+     *i
+     * @return polynomial
+     *  The result of the addition
+     */
+    friend void SequentialMultiply(const std::vector<std::pair<power, coeff>>& p1, const polynomial& p2, polynomial& res);
 };
 
 // Construct a new polynomial object from an iterator to pairs of <power,coeff>

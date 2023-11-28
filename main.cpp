@@ -31,6 +31,21 @@ std::optional<double> poly_test(polynomial& p1,
     return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 }
 
+void test_large_2500() {
+    std::vector<std::pair<power, coeff>> poly_terms(25000, {0, 0});
+
+    for (int i = 0; i < 25000; i++) {
+        poly_terms[i] = {i, 1};
+    }
+
+    polynomial poly1 = polynomial(poly_terms.begin(), poly_terms.end());
+    polynomial poly2 = polynomial(poly_terms.begin(), poly_terms.end());
+
+    polynomial poly3 = poly1 * poly2;
+
+    std::cout << "Finished" << std::endl;
+}
+
 // Test Function Declarations
 void test_constructor_main();
 void test_copy_constructor_main();
@@ -70,6 +85,7 @@ int main()
   test_canonical_form();
   test_multiplication();
   test_modulo_main();
-  test_mult_p1_p2_threads_main();
+  test_large_2500();
+  //test_mult_p1_p2_threads_main();
   //test_mult_p_int_threads();
 }
