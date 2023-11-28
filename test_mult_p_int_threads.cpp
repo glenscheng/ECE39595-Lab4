@@ -12,9 +12,9 @@ using std::pair;
 
 static void CompareSequentialVsParallel(polynomial p, int c){
   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-  test_mult_p_int_sequential(p, c);
+  //test_mult_p_int_sequential(p, c);
   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-  test_mult_p_int_parallel_4(p, c);
+  //test_mult_p_int_parallel_4(p, c);
   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
   double duration1 = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();

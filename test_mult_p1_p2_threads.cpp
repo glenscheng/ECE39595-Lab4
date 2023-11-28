@@ -12,9 +12,9 @@ using std::pair;
 
 static void CompareSequentialVsParallel(polynomial p1, polynomial p2){
   std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-  test_mult_p1_p2_sequential(p1, p2);
+  //test_mult_p1_p2_sequential(p1, p2);
   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-  test_mult_p1_p2_parallel_8(p1, p2);
+  //test_mult_p1_p2_parallel_8(p1, p2);
   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
   double duration1 = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
@@ -25,7 +25,7 @@ static void CompareSequentialVsParallel(polynomial p1, polynomial p2){
 
 static void Parallel4(polynomial p1, polynomial p2){
   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-  test_mult_p1_p2_parallel_4(p1, p2);
+  //test_mult_p1_p2_parallel_4(p1, p2);
   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
   double duration2 = std::chrono::duration_cast<std::chrono::seconds>( t3 - t2 ).count();
@@ -34,7 +34,7 @@ static void Parallel4(polynomial p1, polynomial p2){
 
 static void Parallel8(polynomial p1, polynomial p2){
   std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
-  test_mult_p1_p2_parallel_8(p1, p2);
+  //test_mult_p1_p2_parallel_8(p1, p2);
   std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
   double duration2 = std::chrono::duration_cast<std::chrono::seconds>( t3 - t2 ).count();
