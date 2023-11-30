@@ -296,14 +296,9 @@ polynomial polynomial::operator*(const polynomial& other) const {
   while (largest_poly_begin != largest_poly_end) {
 
     // Insert a term in the polynomial of each thread
-    threads_p1_terms[thread_no].push_back({largest_poly_begin -> first, largest_poly_begin -> second});
+    threads_p1_terms[thread_no % num_threads].push_back(*largest_poly_begin);
     largest_poly_begin++;
     thread_no++;
-
-    // Check for overflow
-    if (thread_no >= num_threads) {
-      thread_no = 0;
-    }
   }
 
   // Perform sequential multiplication in 4 threads
